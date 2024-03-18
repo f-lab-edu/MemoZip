@@ -7,23 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A4DE741E2B9C45A200D9ABF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DE741D2B9C45A200D9ABF1 /* AppDelegate.swift */; };
-		A4DE74202B9C45A200D9ABF1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DE741F2B9C45A200D9ABF1 /* SceneDelegate.swift */; };
-		A4DE74222B9C45A200D9ABF1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DE74212B9C45A200D9ABF1 /* ViewController.swift */; };
-		A4DE74272B9C45A300D9ABF1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74262B9C45A300D9ABF1 /* Assets.xcassets */; };
+		A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */ = {isa = PBXBuildFile; fileRef = A4AB4ACA2BA8607000CD1104 /* MyLibrary */; };
 		A4DE742A2B9C45A300D9ABF1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74292B9C45A300D9ABF1 /* Base */; };
-		A4DE74322B9C477500D9ABF1 /* secret.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74312B9C477500D9ABF1 /* secret.jpeg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A4AB4ACA2BA8607000CD1104 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MyLibrary; path = ../MyLibrary; sourceTree = "<group>"; };
 		A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A4DE741D2B9C45A200D9ABF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A4DE741F2B9C45A200D9ABF1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A4DE74212B9C45A200D9ABF1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A4DE74262B9C45A300D9ABF1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A4DE74292B9C45A300D9ABF1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A4DE742B2B9C45A300D9ABF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A4DE74312B9C477500D9ABF1 /* secret.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = secret.jpeg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +32,7 @@
 		A4DE74112B9C45A200D9ABF1 = {
 			isa = PBXGroup;
 			children = (
+				A4AB4ACA2BA8607000CD1104 /* MyLibrary */,
 				A4DE741C2B9C45A200D9ABF1 /* MemoZip */,
 				A4DE741B2B9C45A200D9ABF1 /* Products */,
 			);
@@ -56,13 +49,8 @@
 		A4DE741C2B9C45A200D9ABF1 /* MemoZip */ = {
 			isa = PBXGroup;
 			children = (
-				A4DE741D2B9C45A200D9ABF1 /* AppDelegate.swift */,
-				A4DE741F2B9C45A200D9ABF1 /* SceneDelegate.swift */,
-				A4DE74212B9C45A200D9ABF1 /* ViewController.swift */,
-				A4DE74262B9C45A300D9ABF1 /* Assets.xcassets */,
 				A4DE74282B9C45A300D9ABF1 /* LaunchScreen.storyboard */,
 				A4DE742B2B9C45A300D9ABF1 /* Info.plist */,
-				A4DE74312B9C477500D9ABF1 /* secret.jpeg */,
 			);
 			path = MemoZip;
 			sourceTree = "<group>";
@@ -125,8 +113,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4DE74322B9C477500D9ABF1 /* secret.jpeg in Resources */,
-				A4DE74272B9C45A300D9ABF1 /* Assets.xcassets in Resources */,
 				A4DE742A2B9C45A300D9ABF1 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,9 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4DE74222B9C45A200D9ABF1 /* ViewController.swift in Sources */,
-				A4DE741E2B9C45A200D9ABF1 /* AppDelegate.swift in Sources */,
-				A4DE74202B9C45A200D9ABF1 /* SceneDelegate.swift in Sources */,
+				A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
