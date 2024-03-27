@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D52892BA873B5006C7497 /* AppDelegate.swift */; };
 		A40D528C2BA873BF006C7497 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D528B2BA873BF006C7497 /* SceneDelegate.swift */; };
-		A40D52922BA87652006C7497 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = A40D52912BA87652006C7497 /* MyLibrary */; };
-		A41526522BA87E5900BAA662 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A41526512BA87E5900BAA662 /* RxSwift */; };
-		A41526552BA87E8900BAA662 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A41526542BA87E8900BAA662 /* Alamofire */; };
-		A415265A2BA87EB700BAA662 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = A41526592BA87EB700BAA662 /* ReactorKit */; };
-		A415265D2BA87EC200BAA662 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = A415265C2BA87EC200BAA662 /* TinyConstraints */; };
+		A41526B22BB4470600BAA662 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B12BB4470600BAA662 /* TinyConstraints */; };
+		A41526B42BB4471900BAA662 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B32BB4471900BAA662 /* Alamofire */; };
+		A41526B62BB4471900BAA662 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B52BB4471900BAA662 /* AlamofireDynamic */; };
+		A41526B82BB4473100BAA662 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B72BB4473100BAA662 /* RxSwift */; };
+		A41526BA2BB4473B00BAA662 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B92BB4473B00BAA662 /* ReactorKit */; };
+		A41526BC2BB447A500BAA662 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = A41526BB2BB447A500BAA662 /* MyLibrary */; };
 		A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */ = {isa = PBXBuildFile; fileRef = A4AB4ACA2BA8607000CD1104 /* MyLibrary */; };
 		A4DE742A2B9C45A300D9ABF1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74292B9C45A300D9ABF1 /* Base */; };
 /* End PBXBuildFile section */
@@ -32,11 +33,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A41526552BA87E8900BAA662 /* Alamofire in Frameworks */,
-				A41526522BA87E5900BAA662 /* RxSwift in Frameworks */,
-				A415265D2BA87EC200BAA662 /* TinyConstraints in Frameworks */,
-				A415265A2BA87EB700BAA662 /* ReactorKit in Frameworks */,
-				A40D52922BA87652006C7497 /* MyLibrary in Frameworks */,
+				A41526BC2BB447A500BAA662 /* MyLibrary in Frameworks */,
+				A41526B22BB4470600BAA662 /* TinyConstraints in Frameworks */,
+				A41526B62BB4471900BAA662 /* AlamofireDynamic in Frameworks */,
+				A41526B82BB4473100BAA662 /* RxSwift in Frameworks */,
+				A41526BA2BB4473B00BAA662 /* ReactorKit in Frameworks */,
+				A41526B42BB4471900BAA662 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,11 +98,12 @@
 			);
 			name = MemoZip;
 			packageProductDependencies = (
-				A40D52912BA87652006C7497 /* MyLibrary */,
-				A41526512BA87E5900BAA662 /* RxSwift */,
-				A41526542BA87E8900BAA662 /* Alamofire */,
-				A41526592BA87EB700BAA662 /* ReactorKit */,
-				A415265C2BA87EC200BAA662 /* TinyConstraints */,
+				A41526B12BB4470600BAA662 /* TinyConstraints */,
+				A41526B32BB4471900BAA662 /* Alamofire */,
+				A41526B52BB4471900BAA662 /* AlamofireDynamic */,
+				A41526B72BB4473100BAA662 /* RxSwift */,
+				A41526B92BB4473B00BAA662 /* ReactorKit */,
+				A41526BB2BB447A500BAA662 /* MyLibrary */,
 			);
 			productName = MemoZip;
 			productReference = A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */;
@@ -435,29 +438,34 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A40D52912BA87652006C7497 /* MyLibrary */ = {
+		A41526B12BB4470600BAA662 /* TinyConstraints */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MyLibrary;
+			package = A415265B2BA87EC200BAA662 /* XCRemoteSwiftPackageReference "TinyConstraints" */;
+			productName = TinyConstraints;
 		};
-		A41526512BA87E5900BAA662 /* RxSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A41526502BA87E5900BAA662 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		A41526542BA87E8900BAA662 /* Alamofire */ = {
+		A41526B32BB4471900BAA662 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A41526532BA87E8900BAA662 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
-		A41526592BA87EB700BAA662 /* ReactorKit */ = {
+		A41526B52BB4471900BAA662 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A41526532BA87E8900BAA662 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+		A41526B72BB4473100BAA662 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A41526502BA87E5900BAA662 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		A41526B92BB4473B00BAA662 /* ReactorKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A41526582BA87EB700BAA662 /* XCRemoteSwiftPackageReference "ReactorKit" */;
 			productName = ReactorKit;
 		};
-		A415265C2BA87EC200BAA662 /* TinyConstraints */ = {
+		A41526BB2BB447A500BAA662 /* MyLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A415265B2BA87EC200BAA662 /* XCRemoteSwiftPackageReference "TinyConstraints" */;
-			productName = TinyConstraints;
+			productName = MyLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
