@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D52892BA873B5006C7497 /* AppDelegate.swift */; };
-		A40D528C2BA873BF006C7497 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D528B2BA873BF006C7497 /* SceneDelegate.swift */; };
 		A41526B22BB4470600BAA662 /* TinyConstraints in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B12BB4470600BAA662 /* TinyConstraints */; };
 		A41526B42BB4471900BAA662 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B32BB4471900BAA662 /* Alamofire */; };
 		A41526B62BB4471900BAA662 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A41526B52BB4471900BAA662 /* AlamofireDynamic */; };
@@ -21,7 +20,6 @@
 
 /* Begin PBXFileReference section */
 		A40D52892BA873B5006C7497 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A40D528B2BA873BF006C7497 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A4AB4ACA2BA8607000CD1104 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MyLibrary; path = ../MyLibrary; sourceTree = "<group>"; };
 		A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4DE74292B9C45A300D9ABF1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -74,7 +72,6 @@
 			isa = PBXGroup;
 			children = (
 				A40D52892BA873B5006C7497 /* AppDelegate.swift */,
-				A40D528B2BA873BF006C7497 /* SceneDelegate.swift */,
 				A4DE74282B9C45A300D9ABF1 /* LaunchScreen.storyboard */,
 				A4DE742B2B9C45A300D9ABF1 /* Info.plist */,
 			);
@@ -166,7 +163,6 @@
 			files = (
 				A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */,
 				A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */,
-				A40D528C2BA873BF006C7497 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

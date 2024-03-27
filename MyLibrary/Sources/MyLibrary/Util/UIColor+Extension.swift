@@ -12,54 +12,54 @@ import UIKit
 @available(iOS 15.0, *)
 extension UIColor {
     static var todayDetailCellTint: UIColor {
-        UIColor(named: "todayDetailCellTint") ?? .tintColor
+        UIColor(named: "TodayDetailCellTint") ?? .tintColor
     }
-    
+
     static var todayListCellBackground: UIColor {
-        UIColor(named: "todayListCellBackground") ?? .secondarySystemBackground
+        UIColor(named: "TodayListCellBackground") ?? .secondarySystemBackground
     }
-    
-    static var todayListCellConeButtonTint: UIColor {
-        UIColor(named: "todayListCellConeButtonTint") ?? .tintColor
+
+    static var todayListCellDoneButtonTint: UIColor {
+        UIColor(named: "TodayListCellDoneButtonTint") ?? .tintColor
     }
-    
+
     static var todayGradientAllBegin: UIColor {
-        UIColor(named: "todayGradientAllBegin") ?? .systemFill
+        UIColor(named: "TodayGradientAllBegin") ?? .systemFill
     }
-    
+
     static var todayGradientAllEnd: UIColor {
-        UIColor(named: "todayGradientAllEnd") ?? .quaternarySystemFill
+        UIColor(named: "TodayGradientAllEnd") ?? .quaternarySystemFill
     }
-    
+
     static var todayGradientFutureBegin: UIColor {
-        UIColor(named: "todayGradientFutureBegin") ?? .systemFill
+        UIColor(named: "TodayGradientFutureBegin") ?? .systemFill
     }
-    
+
     static var todayGradientFutureEnd: UIColor {
-        UIColor(named: "todayGradientFutureEnd") ?? .quaternarySystemFill
+        UIColor(named: "TodayGradientFutureEnd") ?? .quaternarySystemFill
     }
-    
+
     static var todayGradientTodayBegin: UIColor {
-        UIColor(named: "todayGradientTodayBegin") ?? .systemFill
+        UIColor(named: "TodayGradientTodayBegin") ?? .systemFill
     }
-    
+
     static var todayGradientTodayEnd: UIColor {
-        UIColor(named: "todayGradientTodayEnd") ?? .quaternarySystemFill
+        UIColor(named: "TodayGradientTodayEnd") ?? .quaternarySystemFill
     }
-    
+
     static var todayNavigationBackground: UIColor {
-        UIColor(named: "todayNavigationBackground") ?? .secondarySystemGroupedBackground
+        UIColor(named: "TodayNavigationBackground") ?? .secondarySystemBackground
     }
-    
+
     static var todayPrimaryTint: UIColor {
-        UIColor(named: "todayPrimaryTint") ?? .tintColor
+        UIColor(named: "TodayPrimaryTint") ?? .tintColor
     }
-    
+
     static var todayProgressLowerBackground: UIColor {
-        UIColor(named: "todayProgressLowerBackground") ?? .systemGray
+        UIColor(named: "TodayProgressLowerBackground") ?? .systemGray
     }
-    
+
     static var todayProgressUpperBackground: UIColor {
-        UIColor(named: "todayProgressUpperBackground") ?? .systemGray6
+        UIColor(named: "TodayProgressUpperBackground") ?? .systemGray6
     }
 }
