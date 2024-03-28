@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15.0, *)
 extension UIContentConfiguration {
     func updated(for state: UIConfigurationState) -> Self {
         return self

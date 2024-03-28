@@ -8,7 +8,6 @@
 import UIKit
 import TinyConstraints
 
-@available(iOS 15.0, *)
 public class ReminderListViewController: UICollectionViewController {
     var dataSource: DataSource!
     var reminders: [Reminder] = Reminder.sampleData

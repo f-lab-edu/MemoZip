@@ -9,7 +9,6 @@ import Foundation
 
 import UIKit
 
-@available(iOS 15.0, *)
 extension UIColor {
     static var todayDetailCellTint: UIColor {
         UIColor(named: "TodayDetailCellTint") ?? .tintColor

@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15.0, *)
 extension ReminderListViewController {
     @objc func didPressDoneButton(_ sender: ReminderDoneButton) {
         guard let id = sender.id else { return }

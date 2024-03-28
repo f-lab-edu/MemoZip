@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15.0, *)
 class TextViewContentView: UIView, UIContentView {
     struct Configuration: UIContentConfiguration {
         var text: String? = ""
@@ -47,14 +46,12 @@ class TextViewContentView: UIView, UIContentView {
     }
 }
 
-@available(iOS 15.0, *)
 extension UICollectionViewListCell {
     func textViewConfiguration() -> TextViewContentView.Configuration {
         TextViewContentView.Configuration()
     }
 }
 
-@available(iOS 15.0, *)
 extension TextViewContentView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         guard let configuration = configuration as? TextViewContentView.Configuration else { return }

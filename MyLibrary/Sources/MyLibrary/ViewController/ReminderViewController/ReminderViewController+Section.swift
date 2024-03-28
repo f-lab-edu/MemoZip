@@ -7,7 +7,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 extension ReminderViewController {
     enum Section: Int, Hashable {
         case view

@@ -8,7 +8,6 @@
 
 import UIKit
 
-@available(iOS 15.0, *)
 class TextFieldContentView: UIView, UIContentView {
     struct Configuration: UIContentConfiguration {
         var text: String? = ""
@@ -53,7 +52,6 @@ class TextFieldContentView: UIView, UIContentView {
     }
 }
 
-@available(iOS 15.0, *)
 extension UICollectionViewListCell {
     func textFieldConfiguration() -> TextFieldContentView.Configuration {
         TextFieldContentView.Configuration()

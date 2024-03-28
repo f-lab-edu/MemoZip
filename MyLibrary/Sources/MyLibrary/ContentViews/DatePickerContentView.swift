@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15.0, *)
 class DatePickerContentView: UIView, UIContentView {
     struct Configuration: UIContentConfiguration {
         var date = Date.now
@@ -48,7 +47,6 @@ class DatePickerContentView: UIView, UIContentView {
     }
 }
 
-@available(iOS 15.0, *)
 extension UICollectionViewListCell {
     func datePickerConfiguration() -> DatePickerContentView.Configuration {
         DatePickerContentView.Configuration()

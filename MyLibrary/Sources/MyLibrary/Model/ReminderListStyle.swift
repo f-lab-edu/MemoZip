@@ -7,7 +7,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 enum ReminderListStyle: Int {
     case today
     case future

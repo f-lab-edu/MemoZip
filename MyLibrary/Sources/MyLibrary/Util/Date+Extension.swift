@@ -7,7 +7,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 extension Date {
     var dayAndTimeText: String {
         let timeText = formatted(date: .omitted, time: .shortened)
