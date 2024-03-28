@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D52892BA873B5006C7497 /* AppDelegate.swift */; };
-		A41526BC2BB447A500BAA662 /* MyLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = A41526BB2BB447A500BAA662 /* MyLibrary */; };
+		A48FF5912BB5B5B3002579C1 /* Libraries in Frameworks */ = {isa = PBXBuildFile; productRef = A48FF5902BB5B5B3002579C1 /* Libraries */; };
+		A48FF5932BB5B5B3002579C1 /* Model in Frameworks */ = {isa = PBXBuildFile; productRef = A48FF5922BB5B5B3002579C1 /* Model */; };
+		A48FF5952BB5B5B3002579C1 /* ViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = A48FF5942BB5B5B3002579C1 /* ViewModel */; };
 		A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */ = {isa = PBXBuildFile; fileRef = A4AB4ACA2BA8607000CD1104 /* MyLibrary */; };
 		A4DE742A2B9C45A300D9ABF1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74292B9C45A300D9ABF1 /* Base */; };
 /* End PBXBuildFile section */
@@ -26,7 +28,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A41526BC2BB447A500BAA662 /* MyLibrary in Frameworks */,
+				A48FF5932BB5B5B3002579C1 /* Model in Frameworks */,
+				A48FF5952BB5B5B3002579C1 /* ViewModel in Frameworks */,
+				A48FF5912BB5B5B3002579C1 /* Libraries in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +89,9 @@
 			);
 			name = MemoZip;
 			packageProductDependencies = (
-				A41526BB2BB447A500BAA662 /* MyLibrary */,
+				A48FF5902BB5B5B3002579C1 /* Libraries */,
+				A48FF5922BB5B5B3002579C1 /* Model */,
+				A48FF5942BB5B5B3002579C1 /* ViewModel */,
 			);
 			productName = MemoZip;
 			productReference = A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */;
@@ -380,9 +386,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A41526BB2BB447A500BAA662 /* MyLibrary */ = {
+		A48FF5902BB5B5B3002579C1 /* Libraries */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MyLibrary;
+			productName = Libraries;
+		};
+		A48FF5922BB5B5B3002579C1 /* Model */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Model;
+		};
+		A48FF5942BB5B5B3002579C1 /* ViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ViewModel;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
