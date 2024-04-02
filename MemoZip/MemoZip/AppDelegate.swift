@@ -33,11 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          */
         let tabBarController = UITabBarController()
         
-        let reminderListViewFlowLayout = UICollectionViewFlowLayout()
-        let reminderListViewController = UINavigationController(rootViewController: ReminderListViewController(collectionViewLayout: reminderListViewFlowLayout))
+        let reminderListViewController = UINavigationController(rootViewController: ReminderListViewController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let reactor = HomeViewReactor()
-        let homeViewController = UINavigationController(rootViewController: HomeViewController(reactor: reactor))
+        //let reactor = HomeViewReactor()
+        let homeViewController = UINavigationController(rootViewController:  HomeViewController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         tabBarController.setViewControllers([homeViewController, reminderListViewController], animated: true)
         

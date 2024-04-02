@@ -61,16 +61,17 @@ public class HomeViewReactor: Reactor {
         return newState
     }
     
-   
-     static func configSections() -> [HomeSection] {
-     
-     let defaultCell = TableViewCellSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "세상에 나쁜 아라찌는 없다.", subTitle: "아라찌")))
-     
-     let defaultCell2 = TableViewCellSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "웃어서 행복한거다.", subTitle: "노홍철")))
-     
-     let defaultsection = HomeSection.first([defaultCell, defaultCell2])
-     
-     return [defaultsection]
-     }
+    
+    static func configSections() -> [HomeSection] {
+        
+        // FIXME: Dummy Data 수정 예정
+        let defaultCell = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "물 3잔 마시기")))
+        
+        let defaultCell2 = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "OO기업 자소서 쓰기", subTitle: "오늘까지", isComplete: true)))
+        
+        let defaultsection = HomeSection.first([defaultCell, defaultCell2])
+        
+        return [defaultsection]
+    }
     
 }

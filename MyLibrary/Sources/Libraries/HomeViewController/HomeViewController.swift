@@ -18,44 +18,38 @@ public class HomeViewController: UICollectionViewController, View {
     
     public typealias Reactor = HomeViewReactor
     
-    // MARK: - Constants
-    /*
-    struct Reusable { // cell 등록
-        static let todoListCell = ReusableCell<TodoListCell>()
-    }*/
-    
     public var disposeBag = DisposeBag()
-    let dataSource: ManageMentDataSource = ManageMentDataSource(configureCell: { _, collectionView, indexPath, items -> UICollectionViewCell in
-    
-        switch items {
+
+    let dataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>(configureCell: { dataSource, collectionView, indexPath, item in
+        switch item {
         case .defaultCell(let reactor):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodoListCell", for: indexPath)
-            // cell.reactor = reactor
+            let cell = collectionView.dequeueReusableCell(TodoListCell.self, for: indexPath)
+            cell.reactor = reactor
             return cell
         }
-        
     })
     
-    
-    public init(reactor: Reactor) {
-        super.init(nibName: nil, bundle: nil)
-        self.reactor = reactor
-        self.collectionView.register(TodoListCell.self, forCellWithReuseIdentifier: "TodoListCell")
-    }
-    
-    public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setBackGroundUI()
+        initCollectionView()
         
+        self.bind(reactor: Reactor())
+    }
+    
+    private func initCollectionView() {
+        self.collectionView.register(TodoListCell.self)
+        
+        self.collectionView.delegate = nil
+        self.collectionView.dataSource = nil
+        
+        self.collectionView.rx.setDelegate(self).disposed(by: disposeBag)
+        
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
     public func bind(reactor: HomeViewReactor) {
-        collectionView.rx.setDelegate(self).disposed(by: disposeBag)
         
         // action
         collectionView.rx.itemSelected
@@ -71,17 +65,23 @@ public class HomeViewController: UICollectionViewController, View {
                 self.collectionView.deselectItem(at: indexPath, animated: true)
             }).disposed(by: disposeBag)
         
+        
         // ui
-        reactor.state.map {$0.sections}.asObservable()
+        reactor.state.map { $0.sections }
+            .asObservable()
             .bind(to: self.collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+         
     }
+
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
-    
-    
-    private func setBackGroundUI() {
-        self.view.backgroundColor = .red
+    // TODO: 유동적인 높이 구현.
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-    }
+        return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+        }
 }
 

@@ -1,22 +1,23 @@
 //
-//  Section.swift
+//  HomeViewController+Section.swift
 //
 //
 //  Created by 박세라 on 4/1/24.
 //
 import RxDataSources
 
+// TODO: Header 추가
 enum HomeSection {
-    case first([TableViewCellSectionItem])
+    case first([HomeSectionItem])
     // ...
 }
-enum TableViewCellSectionItem {
+enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
     // ...
 }
 extension HomeSection: SectionModelType {
     
-    typealias Item = TableViewCellSectionItem
+    typealias Item = HomeSectionItem
     
     var items: [Item] {
         switch self {
@@ -26,7 +27,7 @@ extension HomeSection: SectionModelType {
         }
     }
     
-    init(original: HomeSection, items: [TableViewCellSectionItem]) {
+    init(original: HomeSection, items: [HomeSectionItem]) {
         switch original {
         case .first:
             self = .first(items)
