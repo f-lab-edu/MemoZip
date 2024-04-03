@@ -65,13 +65,21 @@ public class HomeViewReactor: Reactor {
     static func configSections() -> [HomeSection] {
         
         // FIXME: Dummy Data 수정 예정
+        
         let defaultCell = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "물 3잔 마시기")))
         
         let defaultCell2 = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "OO기업 자소서 쓰기", subTitle: "오늘까지", isComplete: true)))
         
-        let defaultsection = HomeSection.first([defaultCell, defaultCell2])
+        let planCell1 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "비트코인 폭발적 상승에 올라타라")))
+        let planCell2 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "Clean Code")))
+        let planCell3 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "개미")))
+        let planCell4 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "꿈꾸는 다락방")))
+        let planCell5 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "동물농장")))
         
-        return [defaultsection]
+        let todoList = HomeSection(header: "Todo", items: [defaultCell, defaultCell2])
+        let planList = HomeSection(header: "Plan", items: [planCell1, planCell2, planCell3, planCell4, planCell5])
+        
+        return [todoList, planList]
     }
     
 }

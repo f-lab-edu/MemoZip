@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import UIKit
 
 extension UIColor {
@@ -60,5 +59,13 @@ extension UIColor {
 
     static var todayProgressUpperBackground: UIColor {
         UIColor(named: "TodayProgressUpperBackground") ?? .systemGray6
+    }
+    
+    static func randomColor() -> UIColor {
+        let red = CGFloat.random(in: 0...1)
+        let green = CGFloat.random(in: 0...1)
+        let blue = CGFloat.random(in: 0...1)
+        let color = UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+        return color
     }
 }

@@ -21,11 +21,28 @@ public class HomeViewController: UICollectionViewController, View {
     public var disposeBag = DisposeBag()
 
     let dataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>(configureCell: { dataSource, collectionView, indexPath, item in
+        
         switch item {
         case .defaultCell(let reactor):
             let cell = collectionView.dequeueReusableCell(TodoListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
+        case .planCell(let reactor):
+            let cell = collectionView.dequeueReusableCell(PlanListCell.self, for: indexPath)
+            cell.reactor = reactor
+            return cell
+        }
+    }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
+        
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as? HeaderCell else {
+                return UICollectionReusableView()
+            }
+            header.reactor = HeaderCellReactor(state: Title(title: dataSource[indexPath.section].header))
+            return header
+        default:
+            assert(false, "Unexpected element kind")
         }
     })
     
@@ -40,6 +57,8 @@ public class HomeViewController: UICollectionViewController, View {
     
     private func initCollectionView() {
         self.collectionView.register(TodoListCell.self)
+        self.collectionView.register(PlanListCell.self)
+        self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
         
         self.collectionView.delegate = nil
         self.collectionView.dataSource = nil
@@ -71,6 +90,7 @@ public class HomeViewController: UICollectionViewController, View {
             .asObservable()
             .bind(to: self.collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+    
          
     }
 
@@ -81,7 +101,33 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     // TODO: 유동적인 높이 구현.
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+        switch indexPath.section {
+        case 0:
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+        case 1:
+            return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
+        default: return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
         }
+    }
+    
+    public override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
+            return header
+            /*
+             case UICollectionView.elementKindSectionFooter:
+             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "MyHeaderFooterView", for: indexPath) as! MyHeaderFooterView
+             return footer
+             */
+        default:
+            return UICollectionReusableView()
+        }
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let width: CGFloat = collectionView.frame.width
+        let height: CGFloat = 60
+        return CGSize(width: width, height: height)
+    }
 }
 

@@ -17,7 +17,7 @@ extension HasTypeName {
 extension UIView: HasTypeName {
   
 }
-
+// MARK: UICollectionView
 extension UICollectionView {
   func register<T: UICollectionViewCell>(_ cellClass: T.Type) {
     self.register(cellClass, forCellWithReuseIdentifier: T.typeName)
@@ -26,4 +26,13 @@ extension UICollectionView {
   func dequeueReusableCell<T: UICollectionViewCell>(_ cellClass: T.Type, for indexPath: IndexPath) -> T {
     return self.dequeueReusableCell(withReuseIdentifier: T.typeName, for: indexPath) as! T
   }
+}
+
+// MARK: UIView
+extension UIView {
+    func roundCorners(cornerRadius: CGFloat, maskedCorners: CACornerMask) {
+        clipsToBounds = true
+        layer.cornerRadius = cornerRadius
+        layer.maskedCorners = CACornerMask(arrayLiteral: maskedCorners)
+    }
 }

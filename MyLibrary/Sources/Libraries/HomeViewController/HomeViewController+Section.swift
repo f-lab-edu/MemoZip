@@ -5,34 +5,31 @@
 //  Created by 박세라 on 4/1/24.
 //
 import RxDataSources
+import Foundation
 
 // TODO: Header 추가
-enum HomeSection {
-    case first([HomeSectionItem])
-    // ...
+struct HomeSection {
+    var header: String
+    var items: [Item]
+    var identity: String
+    
+    init(header: String, items: [Item]) {
+        self.header = header
+        self.items = items
+        self.identity = UUID().uuidString
+    }
 }
 enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
+    case planCell(PlanListCellReactor)
     // ...
 }
 extension HomeSection: SectionModelType {
-    
+   
     typealias Item = HomeSectionItem
     
-    var items: [Item] {
-        switch self {
-        case .first(let items):
-            return items
-        // ...
-        }
-    }
-    
     init(original: HomeSection, items: [HomeSectionItem]) {
-        switch original {
-        case .first:
-            self = .first(items)
-        // ...
-        }
+        self = original
+        self.items = items
     }
-    
 }
