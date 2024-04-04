@@ -26,6 +26,7 @@ let package = Package(
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.0")),
         .package(url: "https://github.com/ReactorKit/ReactorKit.git", .upToNextMajor(from: "3.0.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/RxSwiftCommunity/RxDataSources.git", from: "5.0.0"),
         .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.0.1")),
         .package(url: "https://github.com/roberthein/TinyConstraints", .upToNextMajor(from: "4.0.1"))
         
@@ -38,6 +39,7 @@ let package = Package(
             name: "MyLibrary",
             dependencies: ["RxSwift",
                            .product(name: "RxCocoa", package: "RxSwift"),
+                           "RxDataSources",
                            "ReactorKit",
                            "TinyConstraints",
                            "Alamofire",
