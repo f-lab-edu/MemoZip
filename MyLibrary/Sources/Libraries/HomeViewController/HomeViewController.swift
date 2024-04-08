@@ -7,6 +7,7 @@
 
 import UIKit
 import ReactorKit
+import RepositoryImp
 import RxCocoa
 import RxSwift
 import TinyConstraints
@@ -53,7 +54,9 @@ public class HomeViewController: UICollectionViewController, View {
         
         initCollectionView()
         
-        self.bind(reactor: Reactor())
+        let reactor = Reactor(todoRepository: TodoRepositoryImp())
+        self.bind(reactor: reactor)
+        reactor.action.onNext(.initiate)
     }
     
     private func initCollectionView() {

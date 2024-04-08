@@ -7,9 +7,9 @@
 
 import Foundation
 import ReactorKit
+import Repository
 import RxSwift
 import Model
-
 
 public class HomeViewReactor: Reactor {
     
@@ -23,10 +23,12 @@ public class HomeViewReactor: Reactor {
     
     // MARK: - Constants
     public enum Action {
+        case initiate
         case cellSelected(IndexPath)
     }
     
     public enum Mutation {
+        case update(todos: [Todo])
         case setSelectedIndexPath(IndexPath?)
     }
     
@@ -35,15 +37,20 @@ public class HomeViewReactor: Reactor {
          var sections: [HomeSection]
     }
     
-    public init() {
-         self.initialState = State(
-         sections: HomeViewReactor.configSections()
-         )
+    private let todoRepository: TodoRepository
+    
+    public init(todoRepository: TodoRepository) {
+        self.todoRepository = todoRepository
+        self.initialState = State(
+            sections: HomeViewReactor.configSections()
+        )
     }
     
     // MARK: - func
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .initiate:
+            return self.todoRepository.fetch().map { .update(todos: $0) }
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
@@ -54,8 +61,10 @@ public class HomeViewReactor: Reactor {
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
-        
         switch mutation {
+        case let .update(todos):
+            // TODO: Update newState
+            print(todos)
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
         }
