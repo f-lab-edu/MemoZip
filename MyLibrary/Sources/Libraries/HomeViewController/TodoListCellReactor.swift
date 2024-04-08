@@ -7,6 +7,7 @@
 
 import Foundation
 import ReactorKit
+import Model
 
 class TodoListCellReactor: Reactor {
     

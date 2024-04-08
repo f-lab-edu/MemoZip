@@ -1,11 +1,12 @@
 //
-//  File.swift
-//  
+//  ReminderListViewController+Actions.swift
+//
 //
 //  Created by 박세라 on 3/27/24.
 //
 
 import UIKit
+import Model
 
 extension ReminderListViewController {
     @objc func didPressDoneButton(_ sender: ReminderDoneButton) {

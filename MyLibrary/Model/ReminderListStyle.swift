@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum ReminderListStyle: Int {
+public enum ReminderListStyle: Int {
     case today
     case future
     case all
 
-    var name: String {
+    public var name: String {
         switch self {
         case .today:
             return NSLocalizedString("Today", comment: "Today style name")
@@ -23,7 +23,7 @@ enum ReminderListStyle: Int {
         }
     }
 
-    func shouldInclude(date: Date) -> Bool {
+    public func shouldInclude(date: Date) -> Bool {
         let isInToday = Locale.current.calendar.isDateInToday(date)
         switch self {
         case .today:

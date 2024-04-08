@@ -8,6 +8,7 @@
 import Foundation
 import ReactorKit
 import RxSwift
+import Model
 
 
 public class HomeViewReactor: Reactor {

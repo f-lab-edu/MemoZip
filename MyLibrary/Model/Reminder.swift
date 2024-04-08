@@ -9,10 +9,17 @@ import Foundation
 
 public struct Reminder: Equatable, Identifiable {
     public var id: String = UUID().uuidString
-    var title: String
-    var dueDate: Date
-    var notes: String? = nil
-    var isComplete: Bool = false
+    public var title: String
+    public var dueDate: Date
+    public var notes: String? = nil
+    public var isComplete: Bool = false
+    
+    public init(title: String, dueDate: Date, notes: String? = nil, isComplete: Bool = false) {
+        self.title = title
+        self.dueDate = dueDate
+        self.notes = notes
+        self.isComplete = isComplete
+    }
 }
 
 extension [Reminder] {
@@ -27,6 +34,7 @@ extension [Reminder] {
 #if DEBUG
 extension Reminder {
     public static var sampleData = [
+        
         Reminder(
             title: "Submit reimbursement report", dueDate: Date().addingTimeInterval(800.0),
             notes: "Don't forget about taxi receipts"),

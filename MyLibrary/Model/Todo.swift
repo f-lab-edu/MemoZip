@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Todo {
+public struct Todo {
     
-    var title: String
-    var subTitle: String?
-    var isComplete: Bool? = false
+    public var title: String
+    public var subTitle: String?
+    public var isComplete: Bool? = false
     
-    init(title: String, subTitle: String? = nil, isComplete: Bool? = nil) {
+    public init(title: String, subTitle: String? = nil, isComplete: Bool? = nil) {
         self.title = title
         self.subTitle = subTitle
         self.isComplete = isComplete

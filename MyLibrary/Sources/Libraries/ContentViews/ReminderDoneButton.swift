@@ -6,7 +6,8 @@
 //
 
 import UIKit
+import Model
 
-class ReminderDoneButton: UIButton {
-    var id: Reminder.ID?
+public class ReminderDoneButton: UIButton {
+    public var id: Reminder.ID?
 }

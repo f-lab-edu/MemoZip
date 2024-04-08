@@ -7,6 +7,7 @@
 
 import UIKit
 import TinyConstraints
+import Model
 
 public class ReminderListViewController: UICollectionViewController {
     var dataSource: DataSource!

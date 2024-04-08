@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Model
 
 extension ReminderListViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, Reminder.ID>

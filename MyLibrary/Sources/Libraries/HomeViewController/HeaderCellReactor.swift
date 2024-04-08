@@ -8,6 +8,7 @@
 
 import Foundation
 import ReactorKit
+import Model
 
 class HeaderCellReactor: Reactor {
     

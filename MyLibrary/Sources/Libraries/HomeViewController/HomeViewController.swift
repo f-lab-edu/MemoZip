@@ -11,6 +11,7 @@ import RxCocoa
 import RxSwift
 import TinyConstraints
 import RxDataSources
+import Model
 
 typealias ManageMentDataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
 

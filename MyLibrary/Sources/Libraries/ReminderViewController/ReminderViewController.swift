@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Model
 
 class ReminderViewController: UICollectionViewController {
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Row>

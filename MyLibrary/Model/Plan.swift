@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Plan {
+public struct Plan {
     
-    var title: String
+    public var title: String
     
-    init(title: String) {
+    public init(title: String) {
         self.title = title
     }
 }
