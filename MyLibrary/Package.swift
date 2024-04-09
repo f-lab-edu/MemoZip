@@ -19,6 +19,10 @@ let package = Package(
             targets: ["Model"]
         ),
         .library(
+            name: "Repository",
+            targets: ["Repository", "RepositoryImp"]
+        ),
+        .library(
             name: "ViewModel",
             targets: ["MyLibrary"]
         ),
@@ -34,16 +38,32 @@ let package = Package(
     ],
 
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "Model",
             path: "Model"
         ),
         .target(
+            name: "Repository",
+            dependencies: [
+                "Model",
+            ],
+            path: "Repository/Interface"
+        ),
+        .target(
+            name: "RepositoryImp",
+            dependencies: [
+                "Model",
+                "Repository",
+                .product(name: "RxSwift", package: "RxSwift"),
+            ],
+            path: "Repository/Implementation"
+        ),
+        .target(
             name: "MyLibrary",
             dependencies: [
                 "Model",
+                "Repository",
+                "RepositoryImp", // Temporal Import
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "ReactorKit", package: "ReactorKit"),
                 .product(name: "RxCocoa", package: "RxSwift"),
