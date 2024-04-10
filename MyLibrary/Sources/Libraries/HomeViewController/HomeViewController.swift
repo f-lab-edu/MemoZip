@@ -54,9 +54,11 @@ public class HomeViewController: UICollectionViewController, View {
         
         initCollectionView()
         
-        let reactor = Reactor(todoRepository: TodoRepositoryImp())
+        let reactor = Reactor(todoRepository: TodoRepositoryImp(), planRepository: PlanRepositoryImp())
         self.bind(reactor: reactor)
-        reactor.action.onNext(.initiate)
+        reactor.action.onNext(.initiateTodo)
+        reactor.action.onNext(.initiatePlan)
+        
     }
     
     private func initCollectionView() {

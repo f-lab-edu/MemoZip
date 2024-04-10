@@ -23,12 +23,14 @@ public class HomeViewReactor: Reactor {
     
     // MARK: - Constants
     public enum Action {
-        case initiate
+        case initiateTodo
+        case initiatePlan
         case cellSelected(IndexPath)
     }
     
     public enum Mutation {
-        case update(todos: [Todo])
+        case updateTodo(todos: [Todo])
+        case updatePlan(plans: [Plan])
         case setSelectedIndexPath(IndexPath?)
     }
     
@@ -38,19 +40,25 @@ public class HomeViewReactor: Reactor {
     }
     
     private let todoRepository: TodoRepository
+    private let planRepository: PlanRepository
+    private var sections = [HomeSection]()
     
-    public init(todoRepository: TodoRepository) {
+    public init(todoRepository: TodoRepository, planRepository: PlanRepository) {
         self.todoRepository = todoRepository
+        self.planRepository = planRepository
+        
         self.initialState = State(
-            sections: HomeViewReactor.configSections()
+            sections: [HomeSection]()
         )
     }
     
     // MARK: - func
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .initiate:
-            return self.todoRepository.fetch().map { .update(todos: $0) }
+        case .initiateTodo:
+            return self.todoRepository.fetch().map { .updateTodo(todos: $0) }
+        case .initiatePlan:
+            return self.planRepository.fetch().map { .updatePlan(plans: $0)}
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
@@ -62,34 +70,37 @@ public class HomeViewReactor: Reactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .update(todos):
+        case let .updateTodo(todos):
             // TODO: Update newState
+            var todoCells = [HomeSectionItem]()
+            for todo in todos {
+                todoCells.append(HomeSectionItem.defaultCell(TodoListCellReactor(state: todo)))
+            }
+            
+            let todoList = HomeSection(header: "Todo", items: todoCells)
+            
+            sections.append(todoList)
+            
+            newState.sections = sections
+    
             print(todos)
+        case let .updatePlan(plans):
+            
+            var planCells = [HomeSectionItem]()
+            for plan in plans {
+                planCells.append(HomeSectionItem.planCell(PlanListCellReactor(state: plan)))
+            }
+            
+            let planList = HomeSection(header: "Plan", items: planCells)
+            
+            sections.append(planList)
+            
+            newState.sections = sections
+            print(plans)
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
+        
         }
         return newState
     }
-    
-    
-    static func configSections() -> [HomeSection] {
-        
-        // FIXME: Dummy Data 수정 예정
-        
-        let defaultCell = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "물 3잔 마시기")))
-        
-        let defaultCell2 = HomeSectionItem.defaultCell(TodoListCellReactor(state: Todo(title: "OO기업 자소서 쓰기", subTitle: "오늘까지", isComplete: true)))
-        
-        let planCell1 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "비트코인 폭발적 상승에 올라타라")))
-        let planCell2 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "Clean Code")))
-        let planCell3 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "개미")))
-        let planCell4 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "꿈꾸는 다락방")))
-        let planCell5 = HomeSectionItem.planCell(PlanListCellReactor(state: Plan(title: "동물농장")))
-        
-        let todoList = HomeSection(header: "Todo", items: [defaultCell, defaultCell2])
-        let planList = HomeSection(header: "Plan", items: [planCell1, planCell2, planCell3, planCell4, planCell5])
-        
-        return [todoList, planList]
-    }
-    
 }
