@@ -56,8 +56,7 @@ public class HomeViewController: UICollectionViewController, View {
         
         let reactor = Reactor(todoRepository: TodoRepositoryImp(), planRepository: PlanRepositoryImp())
         self.bind(reactor: reactor)
-        reactor.action.onNext(.initiateTodo)
-        reactor.action.onNext(.initiatePlan)
+        reactor.action.onNext(.initiate)
         
     }
     
