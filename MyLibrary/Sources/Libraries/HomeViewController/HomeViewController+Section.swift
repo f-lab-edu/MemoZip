@@ -22,6 +22,7 @@ struct HomeSection {
 enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
     case planCell(PlanListCellReactor)
+    case categoryCell([String])
     // ...
 }
 extension HomeSection: SectionModelType {

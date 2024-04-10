@@ -67,27 +67,30 @@ public class HomeViewReactor: Reactor {
         var newState = state
         switch mutation {
         case let .update(todos, plans):
-            // TODO: Update newState
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
-            let planCells = plans.map {
+            var planCells = plans.map {
                 HomeSectionItem.planCell(PlanListCellReactor(state: $0))
             }
             
+            // TODO: Category도 Model화 작업 예정.
+            var categoryCells = [HomeSectionItem.categoryCell(["독서", "언어", "운동", "여행", "공부", "계획"])]
+            
+            categoryCells.append(contentsOf: planCells)
+            
             let todoList = HomeSection(header: "Todo", items: todoCells)
-            let planList = HomeSection(header: "Plan", items: planCells)
+            let planList = HomeSection(header: "Plan", items: categoryCells)
             
             if !todos.isEmpty {
                 sections.append(todoList)
             }
+            
             if !plans.isEmpty {
                 sections.append(planList)
             }
             newState.sections = sections
             
-            print(sections)
-           
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
         
