@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		38F451382BC805C80044193B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 38F451372BC805C80044193B /* README.md */; };
 		A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D52892BA873B5006C7497 /* AppDelegate.swift */; };
 		A48FF5912BB5B5B3002579C1 /* Libraries in Frameworks */ = {isa = PBXBuildFile; productRef = A48FF5902BB5B5B3002579C1 /* Libraries */; };
 		A48FF5932BB5B5B3002579C1 /* Model in Frameworks */ = {isa = PBXBuildFile; productRef = A48FF5922BB5B5B3002579C1 /* Model */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		38F451372BC805C80044193B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		A40D52892BA873B5006C7497 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A4AB4ACA2BA8607000CD1104 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MyLibrary; path = ../MyLibrary; sourceTree = "<group>"; };
 		A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +49,7 @@
 		A4DE74112B9C45A200D9ABF1 = {
 			isa = PBXGroup;
 			children = (
+				38F451372BC805C80044193B /* README.md */,
 				A4AB4ACA2BA8607000CD1104 /* MyLibrary */,
 				A4DE741C2B9C45A200D9ABF1 /* MemoZip */,
 				A4DE741B2B9C45A200D9ABF1 /* Products */,
@@ -137,6 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38F451382BC805C80044193B /* README.md in Resources */,
 				A4DE742A2B9C45A300D9ABF1 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
