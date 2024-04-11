@@ -24,8 +24,6 @@ class PlanListCell: UICollectionViewCell, View {
     let progressBaseView = UIView()
     
     override func prepareForReuse() {
-        print(progressBaseView.frame.width)
-        print(progressBaseView.bounds.width)
     }
     
     override init(frame: CGRect) {

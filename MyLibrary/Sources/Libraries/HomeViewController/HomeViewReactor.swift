@@ -23,14 +23,12 @@ public class HomeViewReactor: Reactor {
     
     // MARK: - Constants
     public enum Action {
-        case initiateTodo
-        case initiatePlan
+        case initiate
         case cellSelected(IndexPath)
     }
     
     public enum Mutation {
-        case updateTodo(todos: [Todo])
-        case updatePlan(plans: [Plan])
+        case update(todos: [Todo], plans: [Plan])
         case setSelectedIndexPath(IndexPath?)
     }
     
@@ -55,10 +53,8 @@ public class HomeViewReactor: Reactor {
     // MARK: - func
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .initiateTodo:
-            return self.todoRepository.fetch().map { .updateTodo(todos: $0) }
-        case .initiatePlan:
-            return self.planRepository.fetch().map { .updatePlan(plans: $0)}
+        case .initiate:
+            return Observable.merge(self.todoRepository.fetch().map {.update(todos: $0, plans: [Plan]())}, self.planRepository.fetch().map {.update(todos: [Todo](), plans: $0)} )
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
@@ -70,33 +66,31 @@ public class HomeViewReactor: Reactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .updateTodo(todos):
-            // TODO: Update newState
-            var todoCells = [HomeSectionItem]()
-            for todo in todos {
-                todoCells.append(HomeSectionItem.defaultCell(TodoListCellReactor(state: todo)))
+        case let .update(todos, plans):
+            let todoCells = todos.map {
+                HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
+            var planCells = plans.map {
+                HomeSectionItem.planCell(PlanListCellReactor(state: $0))
+            }
+            
+            // TODO: Category도 Model화 작업 예정.
+            var categoryCells = [HomeSectionItem.categoryCell(["독서", "언어", "운동", "여행", "공부", "계획"])]
+            
+            categoryCells.append(contentsOf: planCells)
             
             let todoList = HomeSection(header: "Todo", items: todoCells)
+            let planList = HomeSection(header: "Plan", items: categoryCells)
             
-            sections.append(todoList)
-            
-            newState.sections = sections
-    
-            print(todos)
-        case let .updatePlan(plans):
-            
-            var planCells = [HomeSectionItem]()
-            for plan in plans {
-                planCells.append(HomeSectionItem.planCell(PlanListCellReactor(state: plan)))
+            if !todos.isEmpty {
+                sections.append(todoList)
             }
             
-            let planList = HomeSection(header: "Plan", items: planCells)
-            
-            sections.append(planList)
-            
+            if !plans.isEmpty {
+                sections.append(planList)
+            }
             newState.sections = sections
-            print(plans)
+            
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
         

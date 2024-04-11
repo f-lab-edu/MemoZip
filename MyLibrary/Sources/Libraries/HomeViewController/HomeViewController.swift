@@ -29,6 +29,10 @@ public class HomeViewController: UICollectionViewController, View {
             let cell = collectionView.dequeueReusableCell(TodoListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
+        case .categoryCell(let items):
+            let cell = collectionView.dequeueReusableCell(CategoryCell.self, for: indexPath)
+            cell.initCellWithItems(items: items)
+            return cell
         case .planCell(let reactor):
             let cell = collectionView.dequeueReusableCell(PlanListCell.self, for: indexPath)
             cell.reactor = reactor
@@ -56,13 +60,13 @@ public class HomeViewController: UICollectionViewController, View {
         
         let reactor = Reactor(todoRepository: TodoRepositoryImp(), planRepository: PlanRepositoryImp())
         self.bind(reactor: reactor)
-        reactor.action.onNext(.initiateTodo)
-        reactor.action.onNext(.initiatePlan)
+        reactor.action.onNext(.initiate)
         
     }
     
     private func initCollectionView() {
         self.collectionView.register(TodoListCell.self)
+        self.collectionView.register(CategoryCell.self)
         self.collectionView.register(PlanListCell.self)
         self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
         
@@ -107,12 +111,13 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     // TODO: 유동적인 높이 구현.
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        switch indexPath.section {
-        case 0:
+        switch dataSource.sectionModels[indexPath.section].items[indexPath.item] {
+        case .defaultCell(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
-        case 1:
+        case .categoryCell(_):
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 32)
+        case .planCell(_):
             return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
-        default: return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
         }
     }
     
@@ -121,18 +126,17 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         case UICollectionView.elementKindSectionHeader:
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
             return header
-            /*
-             case UICollectionView.elementKindSectionFooter:
-             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "MyHeaderFooterView", for: indexPath) as! MyHeaderFooterView
-             return footer
-             */
         default:
             return UICollectionReusableView()
         }
     }
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let width: CGFloat = collectionView.frame.width
-        let height: CGFloat = 60
+        var height: CGFloat = 60
+        // header가 없을 경우 default Header Height 설정
+        if dataSource.sectionModels[section].header == "" {
+            height = 16
+        }
         return CGSize(width: width, height: height)
     }
 }
