@@ -8,18 +8,18 @@ import RxDataSources
 import Foundation
 
 // TODO: Header 추가
-struct HomeSection {
-    var header: String
-    var items: [Item]
-    var identity: String
+public struct HomeSection {
+    public var header: String
+    public var items: [Item]
+    public var identity: String
     
-    init(header: String, items: [Item]) {
+    public init(header: String, items: [Item]) {
         self.header = header
         self.items = items
         self.identity = UUID().uuidString
     }
 }
-enum HomeSectionItem {
+public enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
     case planCell(PlanListCellReactor)
     case categoryCell([String])
@@ -27,9 +27,9 @@ enum HomeSectionItem {
 }
 extension HomeSection: SectionModelType {
    
-    typealias Item = HomeSectionItem
+    public typealias Item = HomeSectionItem
     
-    init(original: HomeSection, items: [HomeSectionItem]) {
+    public init(original: HomeSection, items: [HomeSectionItem]) {
         self = original
         self.items = items
     }

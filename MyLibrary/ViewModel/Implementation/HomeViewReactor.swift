@@ -10,6 +10,7 @@ import ReactorKit
 import Repository
 import RxSwift
 import Model
+import ViewModel
 
 public class HomeViewReactor: Reactor {
     
@@ -33,8 +34,8 @@ public class HomeViewReactor: Reactor {
     }
     
     public struct State {
-         var selectedIndexPath: IndexPath?
-         var sections: [HomeSection]
+         public var selectedIndexPath: IndexPath?
+         public var sections: [HomeSection]
     }
     
     private let todoRepository: TodoRepository

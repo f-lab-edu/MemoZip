@@ -10,14 +10,14 @@ import Foundation
 import ReactorKit
 import Model
 
-class HeaderCellReactor: Reactor {
+public class HeaderCellReactor: Reactor {
     
-    typealias Action = NoAction
+    public typealias Action = NoAction
     
     // MARK: - Property
-    let initialState: Title
+    public let initialState: Title
     
-    init(state: Title) {
+    public init(state: Title) {
         self.initialState = state
     }
 }
