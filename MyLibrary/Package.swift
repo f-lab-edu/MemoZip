@@ -11,8 +11,15 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Libraries",
-            targets: ["Model", "MyLibrary"]
+            name: "LocalLibrary",
+            targets: [
+              "Model",
+              "Repository", 
+              "RepositoryImp",
+              "ViewModel",
+              "ViewModelImp",
+              "MyLibrary"
+            ]
         ),
         .library(
             name: "Model",
@@ -24,7 +31,7 @@ let package = Package(
         ),
         .library(
             name: "ViewModel",
-            targets: ["MyLibrary"]
+            targets: ["ViewModel", "ViewModelImp"]
         ),
     ],
 
@@ -76,6 +83,25 @@ let package = Package(
         .testTarget(
             name: "MyLibraryTests",
             dependencies: ["MyLibrary"]
+        ),
+        .target(
+            name: "ViewModel",
+            dependencies: [
+                "Model",
+                "Repository",
+            ],
+            path: "ViewModel/Interface"
+        ),
+        .target(
+            name: "ViewModelImp",
+            dependencies: [
+                "Model",
+                "Repository",
+                "ViewModel",
+                .product(name: "ReactorKit", package: "ReactorKit"),
+                .product(name: "RxSwift", package: "RxSwift"),
+            ],
+            path: "ViewModel/Implementation"
         ),
     ]
 )
