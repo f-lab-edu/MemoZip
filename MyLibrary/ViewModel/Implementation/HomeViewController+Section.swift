@@ -25,6 +25,7 @@ public enum HomeSectionItem {
     case categoryCell([String])
     // ...
 }
+
 extension HomeSection: SectionModelType {
    
     public typealias Item = HomeSectionItem
