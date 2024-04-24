@@ -71,6 +71,8 @@ let package = Package(
                 "Model",
                 "Repository",
                 "RepositoryImp", // Temporal Import
+                "ViewModel",
+                "ViewModelImp",
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "ReactorKit", package: "ReactorKit"),
                 .product(name: "RxCocoa", package: "RxSwift"),
@@ -89,6 +91,7 @@ let package = Package(
             dependencies: [
                 "Model",
                 "Repository",
+                .product(name: "RxDataSources", package: "RxDataSources"),
             ],
             path: "ViewModel/Interface"
         ),

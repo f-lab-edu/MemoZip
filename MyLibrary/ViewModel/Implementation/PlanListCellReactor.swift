@@ -9,14 +9,14 @@ import Foundation
 import ReactorKit
 import Model
 
-class PlanListCellReactor: Reactor {
+public class PlanListCellReactor: Reactor {
     
-    typealias Action = NoAction
+    public typealias Action = NoAction
     
     // MARK: - Property
-    let initialState: Plan
+    public let initialState: Plan
     
-    init(state: Plan) {
+    public init(state: Plan) {
         self.initialState = state
     }
 }

@@ -13,6 +13,8 @@ import RxSwift
 import TinyConstraints
 import RxDataSources
 import Model
+import ViewModelImp
+import ViewModel
 
 typealias ManageMentDataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
 
@@ -140,4 +142,3 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: height)
     }
 }
-

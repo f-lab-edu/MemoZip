@@ -7,6 +7,8 @@
 
 import UIKit
 import ReactorKit
+import ViewModel
+import ViewModelImp
 
 class HeaderCell: UICollectionReusableView, View {
     

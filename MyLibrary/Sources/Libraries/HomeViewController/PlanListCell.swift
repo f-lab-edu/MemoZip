@@ -6,6 +6,7 @@
 //
 import UIKit
 import ReactorKit
+import ViewModelImp
 
 class PlanListCell: UICollectionViewCell, View {
     

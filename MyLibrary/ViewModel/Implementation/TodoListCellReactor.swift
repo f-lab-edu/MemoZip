@@ -9,14 +9,14 @@ import Foundation
 import ReactorKit
 import Model
 
-class TodoListCellReactor: Reactor {
+public class TodoListCellReactor: Reactor {
     
-    typealias Action = NoAction
+    public typealias Action = NoAction
     
     // MARK: - Property
-    let initialState: Todo
+    public let initialState: Todo
     
-    init(state: Todo) {
+    public init(state: Todo) {
         self.initialState = state
     }
 }
