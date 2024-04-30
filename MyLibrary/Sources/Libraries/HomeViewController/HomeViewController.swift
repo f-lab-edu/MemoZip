@@ -7,7 +7,6 @@
 
 import UIKit
 import ReactorKit
-import RepositoryImp
 import RxCocoa
 import RxSwift
 import TinyConstraints
@@ -18,11 +17,12 @@ import ViewModel
 
 typealias ManageMentDataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
 
-public class HomeViewController: UICollectionViewController, View {
+public class HomeViewController: UICollectionViewController {
     
-    public typealias Reactor = HomeViewReactor
+    typealias Reactor = HomeViewReactor
     
-    public var disposeBag = DisposeBag()
+    private let reactor: Reactor
+    private var disposeBag: DisposeBag = .init()
 
     let dataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>(configureCell: { dataSource, collectionView, indexPath, item in
         
@@ -69,16 +69,25 @@ public class HomeViewController: UICollectionViewController, View {
         }
     })
     
+    public init(reactor: HomeViewReactor) {
+        self.reactor = reactor
+        let layout = UICollectionViewFlowLayout()
+        super.init(collectionViewLayout: layout)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         initCollectionView()
         
-        let reactor = Reactor(todoRepository: TodoRepositoryImp(), planRepository: PlanRepositoryImp())
-        self.bind(reactor: reactor)
-        reactor.action.onNext(.initiate)
+        bindReactor()
         
+        reactor.action.onNext(.initiate)
     }
     
     private func initCollectionView() {
@@ -95,7 +104,7 @@ public class HomeViewController: UICollectionViewController, View {
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
-    public func bind(reactor: HomeViewReactor) {
+    public func bindReactor() {
         
         // action
         collectionView.rx.itemSelected

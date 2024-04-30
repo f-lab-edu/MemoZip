@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?        // window 프로퍼티 추가
     
+    private let appComponent = AppComponent()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -22,11 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let tabBarController = UITabBarController()
         
-        let reminderListViewController = UINavigationController(rootViewController: ReminderListViewController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let reminderListViewController = ReminderListViewController(collectionViewLayout: UICollectionViewFlowLayout())
         
-        let homeViewController = UINavigationController(rootViewController:  HomeViewController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let homeViewController = self.appComponent.homeViewController()
         
-        tabBarController.setViewControllers([homeViewController, reminderListViewController], animated: true)
+        let viewControllers = [homeViewController, reminderListViewController].map { UINavigationController(rootViewController: $0) }
+        tabBarController.setViewControllers(viewControllers, animated: true)
         
         if let items = tabBarController.tabBar.items {
             items[0].selectedImage = UIImage(systemName: "house.fill")

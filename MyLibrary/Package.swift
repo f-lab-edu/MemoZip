@@ -53,6 +53,7 @@ let package = Package(
             name: "Repository",
             dependencies: [
                 "Model",
+                .product(name: "RxSwift", package: "RxSwift"),
             ],
             path: "Repository/Interface"
         ),
