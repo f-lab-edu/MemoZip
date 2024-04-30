@@ -47,7 +47,22 @@ public class HomeViewController: UICollectionViewController, View {
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as? HeaderCell else {
                 return UICollectionReusableView()
             }
-            header.reactor = HeaderCellReactor(state: Title(title: dataSource[indexPath.section].header))
+            
+            header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
+            header.voidHandler = {
+                print("voidHandler, indexPath:\(indexPath)")
+                //guard let self = self else { return }
+                let viewController = AddMemoViewController()
+                
+                let navigationController = UINavigationController(rootViewController: viewController)
+                
+                let window = UIWindow(frame: UIScreen.main.bounds)
+                
+                window.rootViewController = navigationController
+                
+                window.makeKeyAndVisible()
+            }
+            
             return header
         default:
             assert(false, "Unexpected element kind")
@@ -88,12 +103,23 @@ public class HomeViewController: UICollectionViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        
+        
+        
         // state
         reactor.state.map { $0.selectedIndexPath }
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
                 self.collectionView.deselectItem(at: indexPath, animated: true)
+            }).disposed(by: disposeBag)
+        
+        reactor.state.map { $0.move }
+            .compactMap{ $0 }
+            .subscribe(onNext: { [weak self ] indexPath in
+                guard let self = self else { return }
+                let viewController = AddMemoViewController()
+                self.navigationController?.pushViewController(viewController, animated: true)
             }).disposed(by: disposeBag)
         
         
