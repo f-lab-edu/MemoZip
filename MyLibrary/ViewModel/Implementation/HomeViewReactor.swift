@@ -26,16 +26,19 @@ public class HomeViewReactor: Reactor {
     public enum Action {
         case initiate
         case cellSelected(IndexPath)
+        case addItem(IndexPath)
     }
     
     public enum Mutation {
         case update(todos: [Todo], plans: [Plan])
         case setSelectedIndexPath(IndexPath?)
+        case showAddViewController(IndexPath?)
     }
     
     public struct State {
-         public var selectedIndexPath: IndexPath?
-         public var sections: [HomeSection]
+        public var selectedIndexPath: IndexPath?
+        public var sections: [HomeSection]
+        public var move: IndexPath?
     }
     
     private let todoRepository: TodoRepository
@@ -60,6 +63,11 @@ public class HomeViewReactor: Reactor {
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
                 Observable.just(Mutation.setSelectedIndexPath(nil))
+            ])
+        case .addItem(let indexPath):
+            return Observable.concat([
+                Observable.just(Mutation.showAddViewController(indexPath)),
+                Observable.just(Mutation.showAddViewController(nil))
             ])
         }
     }
@@ -94,7 +102,8 @@ public class HomeViewReactor: Reactor {
             
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
-        
+        case .showAddViewController(let indexPath):
+            newState.move = indexPath
         }
         return newState
     }
