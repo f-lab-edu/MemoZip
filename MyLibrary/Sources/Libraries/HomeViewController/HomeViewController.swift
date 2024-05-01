@@ -15,7 +15,9 @@ import Model
 import ViewModelImp
 import ViewModel
 
-typealias ManageMentDataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
+public protocol HomeRouting {
+    func addMemoViewController() -> UIViewController
+}
 
 public class HomeViewController: UICollectionViewController {
     
@@ -23,8 +25,10 @@ public class HomeViewController: UICollectionViewController {
     
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
+    private let routing: HomeRouting
 
-    let dataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>(configureCell: { dataSource, collectionView, indexPath, item in
+    typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
+    lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
         
         switch item {
         case .defaultCell(let reactor):
@@ -69,8 +73,9 @@ public class HomeViewController: UICollectionViewController {
         }
     })
     
-    public init(reactor: HomeViewReactor) {
+    public init(reactor: HomeViewReactor, routing: HomeRouting) {
         self.reactor = reactor
+        self.routing = routing
         let layout = UICollectionViewFlowLayout()
         super.init(collectionViewLayout: layout)
     }
@@ -127,7 +132,7 @@ public class HomeViewController: UICollectionViewController {
             .compactMap{ $0 }
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
-                let viewController = AddMemoViewController()
+                let viewController = self.routing.addMemoViewController()
                 self.navigationController?.pushViewController(viewController, animated: true)
             }).disposed(by: disposeBag)
         
