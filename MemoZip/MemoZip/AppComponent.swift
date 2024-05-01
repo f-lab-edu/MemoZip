@@ -5,7 +5,10 @@ import ViewModel
 import ViewModelImp
 import MyLibrary // => UI, View 혹은 Feature 같은 이름으로 변경 필요.
 
-final class AppComponent {
+typealias AppRouting =
+    HomeRouting
+
+final class AppComponent: AppRouting {
     private let todoRepository: TodoRepository
     private let planRepository: PlanRepository
 
@@ -19,6 +22,10 @@ final class AppComponent {
             todoRepository: self.todoRepository,
             planRepository: self.planRepository
         )
-        return HomeViewController(reactor: reactor)
+        return HomeViewController(reactor: reactor, routing: self)
+    }
+    
+    func addMemoViewController() -> UIViewController {
+        return AddMemoViewController()
     }
 }
