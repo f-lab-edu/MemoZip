@@ -48,28 +48,24 @@ public class HomeViewController: UICollectionViewController {
         
         switch kind {
         case UICollectionView.elementKindSectionHeader:
+            // 재사용 가능한 헤더셀을 가져옴
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as? HeaderCell else {
                 return UICollectionReusableView()
             }
             
             header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
-            header.voidHandler = {
-                print("voidHandler, indexPath:\(indexPath)")
-                //guard let self = self else { return }
-                let viewController = AddMemoViewController()
-                
-                let navigationController = UINavigationController(rootViewController: viewController)
-                
-                let window = UIWindow(frame: UIScreen.main.bounds)
-                
-                window.rootViewController = navigationController
-                
-                window.makeKeyAndVisible()
-            }
+        
+            header.addButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.reactor.action.onNext(.addItem(indexPath))
+                })
+                .disposed(by: header.disposeBag)
             
             return header
         default:
             assert(false, "Unexpected element kind")
+            return UICollectionReusableView()
         }
     })
     
@@ -116,8 +112,6 @@ public class HomeViewController: UICollectionViewController {
             .map{ Reactor.Action.cellSelected($0)}
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
-        
-        
         
         
         // state
