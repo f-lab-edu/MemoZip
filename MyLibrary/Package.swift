@@ -17,7 +17,7 @@ let package = Package(
               "Repository", 
               "RepositoryImp",
               "ViewModel",
-              "MyLibrary"
+              "View"
             ]
         ),
         .library(
@@ -66,7 +66,7 @@ let package = Package(
             path: "Repository/Implementation"
         ),
         .target(
-            name: "MyLibrary",
+            name: "View",
             dependencies: [
                 "Model",
                 "Repository",
@@ -79,11 +79,7 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "TinyConstraints", package: "TinyConstraints"),
             ],
-            path: "Sources"
-        ),
-        .testTarget(
-            name: "MyLibraryTests",
-            dependencies: ["MyLibrary"]
+            path: "View"
         ),
         .target(
             name: "ViewModel",

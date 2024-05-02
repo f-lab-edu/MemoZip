@@ -2,8 +2,7 @@ import Repository
 import RepositoryImp
 import UIKit
 import ViewModel
-import ViewModel
-import MyLibrary // => UI, View 혹은 Feature 같은 이름으로 변경 필요.
+import View
 
 typealias AppRouting =
     HomeRouting
