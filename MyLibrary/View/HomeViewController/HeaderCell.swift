@@ -10,7 +10,6 @@ import ReactorKit
 import RxSwift
 import RxCocoa
 import ViewModel
-import ViewModelImp
 
 class HeaderCell: UICollectionReusableView, View {
     

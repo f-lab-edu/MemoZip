@@ -12,7 +12,6 @@ import RxSwift
 import TinyConstraints
 import RxDataSources
 import Model
-import ViewModelImp
 import ViewModel
 
 public protocol HomeRouting {
