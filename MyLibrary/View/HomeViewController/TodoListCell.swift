@@ -7,7 +7,7 @@
 
 import UIKit
 import ReactorKit
-import ViewModelImp
+import ViewModel
 
 class TodoListCell: UICollectionViewListCell, View {
     
