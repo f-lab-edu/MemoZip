@@ -25,8 +25,6 @@ class HeaderCell: UICollectionReusableView, View {
     var addButton = UIButton()
     // ...
     
-    var voidHandler: (() -> ())?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -53,21 +51,6 @@ class HeaderCell: UICollectionReusableView, View {
     func bind(reactor: HeaderCellReactor) {
         
         titleLabel.text = reactor.initialState.headerTitle
-        
-        addButton.rx.tap
-            .map{ _ in Reactor.Action.buttonTapped}
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        reactor.state.map { $0.isButtonTapped }
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] isTapped in
-                // 버튼의 상태에 따라 UI 업데이트 로직 수행
-                //HomeViewReactor.Action.addItem()
-                self?.voidHandler?()
-            })
-            .disposed(by: disposeBag)
-        
         
     }
 }
