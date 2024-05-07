@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import MyLibrary
+import View
 import ReactorKit
 import RxSwift
 
