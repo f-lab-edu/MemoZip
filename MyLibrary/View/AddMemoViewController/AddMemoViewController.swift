@@ -13,7 +13,7 @@ import TinyConstraints
 public class AddMemoViewController: UIViewController {
 
     // MARK: - Properties
-    var addMemoHandler: (([String: Any]) -> ())?
+    public var messageHandler: ((String)-> ())?
     
     // MARK: UI Components
     var stackView: UIStackView = {
@@ -85,9 +85,6 @@ public class AddMemoViewController: UIViewController {
         initView()
         
         setAction()
-        
-        
-        
     }
     
     private func initView() {
@@ -139,15 +136,13 @@ public class AddMemoViewController: UIViewController {
     }
     
     @objc func submitValue() {
-        print("submitValue")
         guard let memo = textView.text else { return }
-        self.addMemoHandler?(["result": true, "memo": memo])
+        messageHandler?(memo)
         self.dismiss(animated: true)
     }
     
     // 화면 종료 함수
     @objc func dismissView() {
-        self.addMemoHandler?(["result": false, "memo": ""])
         self.dismiss(animated: true)
     }
 }

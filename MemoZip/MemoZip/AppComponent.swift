@@ -24,7 +24,9 @@ final class AppComponent: AppRouting {
         return HomeViewController(reactor: reactor, routing: self)
     }
     
-    func addMemoViewController() -> UIViewController {
-        return AddMemoViewController()
+    func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController {
+        let addMemoVC = AddMemoViewController()
+        addMemoVC.messageHandler = messageHandler
+        return addMemoVC
     }
 }

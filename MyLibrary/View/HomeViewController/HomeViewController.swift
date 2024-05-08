@@ -15,7 +15,8 @@ import Model
 import ViewModel
 
 public protocol HomeRouting {
-    func addMemoViewController() -> UIViewController
+    func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
+    
 }
 
 public class HomeViewController: UICollectionViewController {
@@ -125,14 +126,8 @@ public class HomeViewController: UICollectionViewController {
             .compactMap{ $0 }
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
-                let viewController = self.routing.addMemoViewController() as! AddMemoViewController
-                //self.navigationController?.pushViewController(viewController, animated: true)
-                viewController.addMemoHandler = { [weak self] result in
-                    if let addMemoResult = result["result"] as? Bool, let memo = result["memo"] as? String {
-                        print("addMemoResult:\(addMemoResult), memo:\(memo)")
-                    } else {
-                        // error
-                    }
+                let viewController = self.routing.addMemoViewController { [weak self] memo in
+                    print("memo: \(memo)")
                 }
                 self.present(viewController, animated: true)
             }).disposed(by: disposeBag)
