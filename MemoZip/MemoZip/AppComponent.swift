@@ -4,18 +4,17 @@ import UIKit
 import ViewModel
 import View
 
-typealias AppRouting =
-    HomeRouting
+typealias AppRouting = HomeRouting
 
 final class AppComponent: AppRouting {
     private let todoRepository: TodoRepository
     private let planRepository: PlanRepository
-
+    
     init() {
         self.todoRepository = TodoRepositoryImp()
         self.planRepository = PlanRepositoryImp()
     }
-
+    
     func homeViewController() -> UIViewController {
         let reactor = HomeViewReactor(
             todoRepository: self.todoRepository,

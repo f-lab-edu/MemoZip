@@ -1,8 +1,8 @@
 //
-//  HomeViewController.swift
-//  MemoZip
+// HomeViewController.swift
+// MemoZip
 //
-//  Created by 박세라 on 3/9/24.
+// Created by 박세라 on 3/9/24.
 //
 
 import UIKit
@@ -26,7 +26,7 @@ public class HomeViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     private let routing: HomeRouting
-
+    
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
     lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
         
@@ -54,7 +54,7 @@ public class HomeViewController: UICollectionViewController {
             }
             
             header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
-        
+            
             header.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
@@ -138,10 +138,10 @@ public class HomeViewController: UICollectionViewController {
             .asObservable()
             .bind(to: self.collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-    
-         
+        
+        
     }
-
+    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {

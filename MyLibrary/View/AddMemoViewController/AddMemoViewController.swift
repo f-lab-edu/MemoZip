@@ -1,8 +1,8 @@
 //
-//  AddMemoViewController.swift
+// AddMemoViewController.swift
 //
 //
-//  Created by 박세라 on 4/24/24.
+// Created by 박세라 on 4/24/24.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ import TinyConstraints
 
 
 public class AddMemoViewController: UIViewController {
-
+    
     // MARK: - Properties
     public var messageHandler: ((String)-> ())?
     
