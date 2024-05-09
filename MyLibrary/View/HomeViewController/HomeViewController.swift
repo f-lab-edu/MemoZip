@@ -1,8 +1,8 @@
 //
-//  HomeViewController.swift
-//  MemoZip
+// HomeViewController.swift
+// MemoZip
 //
-//  Created by 박세라 on 3/9/24.
+// Created by 박세라 on 3/9/24.
 //
 
 import UIKit
@@ -15,7 +15,8 @@ import Model
 import ViewModel
 
 public protocol HomeRouting {
-    func addMemoViewController() -> UIViewController
+    func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
+    
 }
 
 public class HomeViewController: UICollectionViewController {
@@ -25,7 +26,7 @@ public class HomeViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     private let routing: HomeRouting
-
+    
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
     lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
         
@@ -53,7 +54,7 @@ public class HomeViewController: UICollectionViewController {
             }
             
             header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
-        
+            
             header.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
@@ -125,14 +126,8 @@ public class HomeViewController: UICollectionViewController {
             .compactMap{ $0 }
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
-                let viewController = self.routing.addMemoViewController() as! AddMemoViewController
-                //self.navigationController?.pushViewController(viewController, animated: true)
-                viewController.addMemoHandler = { [weak self] result in
-                    if let addMemoResult = result["result"] as? Bool, let memo = result["memo"] as? String {
-                        print("addMemoResult:\(addMemoResult), memo:\(memo)")
-                    } else {
-                        // error
-                    }
+                let viewController = self.routing.addMemoViewController { [weak self] memo in
+                    print("memo: \(memo)")
                 }
                 self.present(viewController, animated: true)
             }).disposed(by: disposeBag)
@@ -143,10 +138,10 @@ public class HomeViewController: UICollectionViewController {
             .asObservable()
             .bind(to: self.collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-    
-         
+        
+        
     }
-
+    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
