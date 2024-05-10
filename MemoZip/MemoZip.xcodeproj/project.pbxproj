@@ -10,6 +10,7 @@
 		3822E6DE2BDFA394001F9C2C /* AppComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3822E6DD2BDFA394001F9C2C /* AppComponent.swift */; };
 		3871E2A42BC86154006AD761 /* LocalLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 3871E2A32BC86154006AD761 /* LocalLibrary */; };
 		A40D528A2BA873B5006C7497 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40D52892BA873B5006C7497 /* AppDelegate.swift */; };
+		A47ECFE72BEE3CCB00AA6B4D /* db.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = A47ECFE62BEE3CCB00AA6B4D /* db.sqlite */; };
 		A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */ = {isa = PBXBuildFile; fileRef = A4AB4ACA2BA8607000CD1104 /* MyLibrary */; };
 		A4DE742A2B9C45A300D9ABF1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74292B9C45A300D9ABF1 /* Base */; };
 /* End PBXBuildFile section */
@@ -17,6 +18,7 @@
 /* Begin PBXFileReference section */
 		3822E6DD2BDFA394001F9C2C /* AppComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppComponent.swift; sourceTree = "<group>"; };
 		A40D52892BA873B5006C7497 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A47ECFE62BEE3CCB00AA6B4D /* db.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = db.sqlite; sourceTree = "<group>"; };
 		A4AB4ACA2BA8607000CD1104 /* MyLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = MyLibrary; path = ../MyLibrary; sourceTree = "<group>"; };
 		A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4DE74292B9C45A300D9ABF1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 		A4DE741C2B9C45A200D9ABF1 /* MemoZip */ = {
 			isa = PBXGroup;
 			children = (
+				A47ECFE62BEE3CCB00AA6B4D /* db.sqlite */,
 				A40D52892BA873B5006C7497 /* AppDelegate.swift */,
 				3822E6DD2BDFA394001F9C2C /* AppComponent.swift */,
 				A4DE74282B9C45A300D9ABF1 /* LaunchScreen.storyboard */,
@@ -135,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A4DE742A2B9C45A300D9ABF1 /* Base in Resources */,
+				A47ECFE72BEE3CCB00AA6B4D /* db.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

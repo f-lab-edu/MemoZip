@@ -40,7 +40,8 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/RxSwiftCommunity/RxDataSources.git", from: "5.0.0"),
         .package(url: "https://github.com/roberthein/TinyConstraints", .upToNextMajor(from: "4.0.1")),
-
+        .package(url: "https://github.com/ccgus/fmdb",
+            .upToNextMinor(from: "2.7.8")),
     ],
 
     targets: [
@@ -53,6 +54,7 @@ let package = Package(
             dependencies: [
                 "Model",
                 .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "FMDB", package: "FMDB")
             ],
             path: "Repository/Interface"
         ),
@@ -62,6 +64,7 @@ let package = Package(
                 "Model",
                 "Repository",
                 .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "FMDB", package: "FMDB")
             ],
             path: "Repository/Implementation"
         ),
@@ -78,6 +81,7 @@ let package = Package(
                 .product(name: "RxDataSources", package: "RxDataSources"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "TinyConstraints", package: "TinyConstraints"),
+                .product(name: "FMDB", package: "FMDB")
             ],
             path: "View"
         ),

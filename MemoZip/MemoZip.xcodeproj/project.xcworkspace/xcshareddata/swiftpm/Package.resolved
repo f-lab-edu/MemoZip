@@ -1,5 +1,5 @@
 {
-  "originHash" : "61ecb5d6b090082265d5ed9a4143f2de3fd19e96e4decec3bf88b65c5ff8fa78",
+  "originHash" : "d35a38f9be0d42aa8bb5b8bc8f3cf300d6b1d332a9da189182f85febff623da3",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "723fa5a6c65812aec4a0d7cc432ee198883b6e00",
         "version" : "5.9.0"
+      }
+    },
+    {
+      "identity" : "fmdb",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ccgus/fmdb",
+      "state" : {
+        "revision" : "306c1f8421581d16a8d4a0e919766bb3195dc52b",
+        "version" : "2.7.10"
       }
     },
     {

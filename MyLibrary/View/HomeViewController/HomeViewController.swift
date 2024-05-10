@@ -11,8 +11,10 @@ import RxCocoa
 import RxSwift
 import TinyConstraints
 import RxDataSources
+
 import Model
 import ViewModel
+import RepositoryImp
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
@@ -127,7 +129,10 @@ public class HomeViewController: UICollectionViewController {
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
                 let viewController = self.routing.addMemoViewController { [weak self] memo in
-                    print("memo: \(memo)")
+                    if MemoRepositoryImp().create(content: memo) {
+                        // 메모 create 성공
+                        print("Success insert into Memo: \(memo)")
+                    }
                 }
                 self.present(viewController, animated: true)
             }).disposed(by: disposeBag)
