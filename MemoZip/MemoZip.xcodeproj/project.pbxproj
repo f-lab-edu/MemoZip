@@ -13,6 +13,7 @@
 		A47ECFE72BEE3CCB00AA6B4D /* memo_db.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = A47ECFE62BEE3CCB00AA6B4D /* memo_db.sqlite */; };
 		A4AB4ACB2BA8608C00CD1104 /* MyLibrary in Sources */ = {isa = PBXBuildFile; fileRef = A4AB4ACA2BA8607000CD1104 /* MyLibrary */; };
 		A4DE742A2B9C45A300D9ABF1 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A4DE74292B9C45A300D9ABF1 /* Base */; };
+		A4FCE4A42BF730ED004F6E79 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = A4FCE4A32BF730ED004F6E79 /* .swiftlint.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		A4DE741A2B9C45A200D9ABF1 /* MemoZip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoZip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4DE74292B9C45A300D9ABF1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A4DE742B2B9C45A300D9ABF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4FCE4A32BF730ED004F6E79 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +49,7 @@
 		A4DE74112B9C45A200D9ABF1 = {
 			isa = PBXGroup;
 			children = (
+				A4FCE4A32BF730ED004F6E79 /* .swiftlint.yml */,
 				A4AB4ACA2BA8607000CD1104 /* MyLibrary */,
 				A4DE741C2B9C45A200D9ABF1 /* MemoZip */,
 				A4DE741B2B9C45A200D9ABF1 /* Products */,
@@ -84,6 +87,7 @@
 				A4DE74162B9C45A200D9ABF1 /* Sources */,
 				A4DE74172B9C45A200D9ABF1 /* Frameworks */,
 				A4DE74182B9C45A200D9ABF1 /* Resources */,
+				A4FCE4A22BF72FEF004F6E79 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -137,12 +141,34 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4FCE4A42BF730ED004F6E79 /* .swiftlint.yml in Resources */,
 				A4DE742A2B9C45A300D9ABF1 /* Base in Resources */,
 				A47ECFE72BEE3CCB00AA6B4D /* memo_db.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A4FCE4A22BF72FEF004F6E79 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A4DE74162B9C45A200D9ABF1 /* Sources */ = {
@@ -208,7 +234,7 @@
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -273,7 +299,7 @@
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
