@@ -14,7 +14,6 @@ import RxDataSources
 
 import Model
 import ViewModel
-import RepositoryImp
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
@@ -28,6 +27,7 @@ public class HomeViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     private let routing: HomeRouting
+    private let memoViewModel = MemoViewModel()
     
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
     lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
@@ -129,7 +129,7 @@ public class HomeViewController: UICollectionViewController {
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
                 let viewController = self.routing.addMemoViewController { [weak self] memo in
-                    if MemoRepositoryImp().create(content: memo) {
+                    if self?.memoViewModel.create(content: memo) ?? false {
                         // 메모 create 성공
                         print("Success insert into Memo: \(memo)")
                     }

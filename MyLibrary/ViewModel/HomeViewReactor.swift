@@ -10,7 +10,6 @@ import ReactorKit
 import Repository
 import RxSwift
 import Model
-import ViewModel
 
 public class HomeViewReactor: Reactor {
     
@@ -79,7 +78,7 @@ public class HomeViewReactor: Reactor {
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
-            var planCells = plans.map {
+            let planCells = plans.map {
                 HomeSectionItem.planCell(PlanListCellReactor(state: $0))
             }
             

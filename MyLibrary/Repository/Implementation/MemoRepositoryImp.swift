@@ -20,10 +20,10 @@ public class MemoRepositoryImp: MemoRepository {
         
         let docPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
         
-        let dbPath = docPath!.appendingPathComponent("db.sqlite").path
+        let dbPath = docPath!.appendingPathComponent("memo_db.sqlite").path
         
         if fileManager.fileExists(atPath: dbPath) == false {
-            let dbSource = Bundle.main.path(forResource: "db", ofType: "sqlite")
+            let dbSource = Bundle.main.path(forResource: "memo_db", ofType: "sqlite")
             try! fileManager.copyItem(atPath: dbSource!, toPath: dbPath)
         }
         
