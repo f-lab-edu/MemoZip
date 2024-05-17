@@ -1,0 +1,9 @@
+--- # 문서의 시작
+
+
+# Function Body Length Rule
+function_body_length:
+  warning: 200 # 원하는 경고 수준의 최대 길이
+  error: 50 # 원하는 오류 수준의 최대 길이
+
+... # 문서의 끝
