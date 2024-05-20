@@ -8,12 +8,18 @@
 import Foundation
 import UIKit
 import TinyConstraints
+import RxSwift
+import Repository
+import RepositoryImp
+import FMDB
+import ReactorKit
 
 
 public class AddMemoViewController: UIViewController {
     
     // MARK: - Properties
     public var messageHandler: ((String)-> ())?
+    var disposeBag = DisposeBag()
     
     // MARK: UI Components
     var stackView: UIStackView = {

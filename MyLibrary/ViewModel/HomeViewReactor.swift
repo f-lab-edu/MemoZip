@@ -10,7 +10,6 @@ import ReactorKit
 import Repository
 import RxSwift
 import Model
-import ViewModel
 
 public class HomeViewReactor: Reactor {
     
@@ -43,11 +42,14 @@ public class HomeViewReactor: Reactor {
     
     private let todoRepository: TodoRepository
     private let planRepository: PlanRepository
+    private let memoRepository: MemoRepository
+    
     private var sections = [HomeSection]()
     
-    public init(todoRepository: TodoRepository, planRepository: PlanRepository) {
+    public init(todoRepository: TodoRepository, planRepository: PlanRepository, memoRepository: MemoRepository) {
         self.todoRepository = todoRepository
         self.planRepository = planRepository
+        self.memoRepository = memoRepository
         
         self.initialState = State(
             sections: [HomeSection]()
@@ -79,7 +81,7 @@ public class HomeViewReactor: Reactor {
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
-            var planCells = plans.map {
+            let planCells = plans.map {
                 HomeSectionItem.planCell(PlanListCellReactor(state: $0))
             }
             

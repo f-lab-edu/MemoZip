@@ -9,18 +9,21 @@ typealias AppRouting = HomeRouting
 final class AppComponent: AppRouting {
     private let todoRepository: TodoRepository
     private let planRepository: PlanRepository
+    private let memoRepository: MemoRepository
     
     init() {
         self.todoRepository = TodoRepositoryImp()
         self.planRepository = PlanRepositoryImp()
+        self.memoRepository = MemoRepositoryImp()
     }
     
     func homeViewController() -> UIViewController {
         let reactor = HomeViewReactor(
             todoRepository: self.todoRepository,
-            planRepository: self.planRepository
+            planRepository: self.planRepository,
+            memoRepository: self.memoRepository
         )
-        return HomeViewController(reactor: reactor, routing: self)
+        return HomeViewController(reactor: reactor, routing: self, memoRepository: memoRepository)
     }
     
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController {
