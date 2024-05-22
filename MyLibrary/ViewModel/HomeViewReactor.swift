@@ -63,7 +63,7 @@ public class HomeViewReactor: Reactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .initiate:
-            return Observable.concat(
+            return Observable.merge(
                 self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
                 self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
             )
@@ -89,7 +89,10 @@ public class HomeViewReactor: Reactor {
             
             return Observable.concat(
                 Observable.just(Mutation.saveMemo(memo)),
-                self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
+                Observable.merge(
+                    self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
+                    self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
+                )
             )
         }
     }
@@ -120,6 +123,10 @@ public class HomeViewReactor: Reactor {
             
             if !plans.isEmpty {
                 sections.append(planList)
+            }
+            
+            if sections.count > 2 {
+                sections.removeFirst()
             }
             newState.sections = sections
             
