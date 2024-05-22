@@ -65,7 +65,7 @@ public class HomeViewController: UICollectionViewController {
             header.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
-                    self.reactor.action.onNext(.addItem(indexPath))
+                    self.reactor.action.onNext(.moveToAddMemo(indexPath))
                 })
                 .disposed(by: header.disposeBag)
             
@@ -136,11 +136,14 @@ public class HomeViewController: UICollectionViewController {
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
                 let viewController = self.routing.addMemoViewController { [weak self] memo in
-                    if self?.memoRepository.create(content: memo) ?? false {
-                        // 메모 create 성공
-                        print("Success insert into Memo: \(memo)")
-                        // self?.memoRepository.fetch()
-                    }
+                    guard let self = self else { return }
+                    // 메모 create 성공
+                    print("Success insert into Memo: \(memo)")
+                    // self?.memoRepository.fetch()
+                    Observable.just(memo)
+                        .map { HomeViewReactor.Action.addMemo($0) }
+                        .bind(to: self.reactor.action)
+                        .disposed(by: self.disposeBag)
                 }
                 self.present(viewController, animated: true)
             }).disposed(by: disposeBag)

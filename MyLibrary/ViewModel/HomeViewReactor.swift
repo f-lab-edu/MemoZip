@@ -25,19 +25,22 @@ public class HomeViewReactor: Reactor {
     public enum Action {
         case initiate
         case cellSelected(IndexPath)
-        case addItem(IndexPath)
+        case moveToAddMemo(IndexPath)
+        case addMemo(String)
     }
     
     public enum Mutation {
         case update(todos: [Todo], plans: [Memo])//[Plan])
         case setSelectedIndexPath(IndexPath?)
         case showAddViewController(IndexPath?)
+        case saveMemo(String)
     }
     
     public struct State {
         public var selectedIndexPath: IndexPath?
         public var sections: [HomeSection]
         public var move: IndexPath?
+        public var memonContent: String?
     }
     
     private let todoRepository: TodoRepository
@@ -76,11 +79,18 @@ public class HomeViewReactor: Reactor {
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
                 Observable.just(Mutation.setSelectedIndexPath(nil))
             ])
-        case .addItem(let indexPath):
+        case .moveToAddMemo(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.showAddViewController(indexPath)),
                 Observable.just(Mutation.showAddViewController(nil))
             ])
+        case .addMemo(let memo):
+            guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))} // ?
+            
+            return Observable.concat(
+                Observable.just(Mutation.saveMemo(memo)),
+                self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
+            )
         }
     }
     
@@ -117,6 +127,8 @@ public class HomeViewReactor: Reactor {
             newState.selectedIndexPath = indexPath
         case .showAddViewController(let indexPath):
             newState.move = indexPath
+        case .saveMemo(let memo):
+            newState.memonContent = memo
         }
         return newState
     }
