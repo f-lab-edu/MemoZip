@@ -34,7 +34,6 @@ public class MemoRepositoryImp: MemoRepository {
             while rs.next() {
                 let memoContent = rs.string(forColumn: "content")
                 memoList.append(Memo(content: memoContent!))
-                // print("memo: \(memoContent)")
             }
         } catch let error as NSError {
             print("failed: \(error.localizedDescription)")
@@ -62,7 +61,18 @@ public class MemoRepositoryImp: MemoRepository {
 
     public func update() {}
 
-    public func delete() {}
+    public func delete() -> Bool {
+        do {
+            let sql = "DELETE FROM memo"
+            
+            try self.dbManger.fmdb.executeStatements(sql)
+            return true
+        } catch let error as NSError {
+            print("Delete Error : \(error.localizedDescription)")
+            return false
+        }
+        
+    }
 }
 /**
  

@@ -29,7 +29,7 @@ public class HomeViewReactor: Reactor {
     }
     
     public enum Mutation {
-        case update(todos: [Todo], plans: [Plan])
+        case update(todos: [Todo], plans: [Memo])//[Plan])
         case setSelectedIndexPath(IndexPath?)
         case showAddViewController(IndexPath?)
     }
@@ -60,7 +60,17 @@ public class HomeViewReactor: Reactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .initiate:
-            return Observable.merge(self.todoRepository.fetch().map {.update(todos: $0, plans: [Plan]())}, self.planRepository.fetch().map {.update(todos: [Todo](), plans: $0)} )
+            return Observable.concat(
+                self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
+                self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
+            )
+            /*
+             return Observable.concat(
+                 self.todoRepository.fetch().map {.update(todos: $0, plans: [Plan]())},
+                 self.planRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
+             )
+             
+             */
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
@@ -82,11 +92,12 @@ public class HomeViewReactor: Reactor {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
             let planCells = plans.map {
-                HomeSectionItem.planCell(PlanListCellReactor(state: $0))
+                //HomeSectionItem.planCell(PlanListCellReactor(state: $0))
+                HomeSectionItem.memoCell(MemoListCellReactor(state:  $0))
             }
             
             // TODO: Category도 Model화 작업 예정.
-            var categoryCells = [HomeSectionItem.categoryCell(["독서", "언어", "운동", "여행", "공부", "계획"])]
+            var categoryCells = [HomeSectionItem.categoryCell(["메모", "독서", "언어", "운동", "여행", "공부", "계획"])]
             
             categoryCells.append(contentsOf: planCells)
             

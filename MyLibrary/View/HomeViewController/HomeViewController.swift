@@ -46,6 +46,10 @@ public class HomeViewController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(PlanListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
+        case .memoCell(let reactor):
+            let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
+            cell.reactor = reactor
+            return cell
         }
     }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
         
@@ -75,7 +79,7 @@ public class HomeViewController: UICollectionViewController {
     public init(reactor: HomeViewReactor, routing: HomeRouting, memoRepository: MemoRepository) {
         self.reactor = reactor
         self.routing = routing
-        self.memoRepository = memoRepository
+        self.memoRepository = memoRepository // FIXME: 수정
         let layout = UICollectionViewFlowLayout()
         super.init(collectionViewLayout: layout)
     }
@@ -99,6 +103,7 @@ public class HomeViewController: UICollectionViewController {
         self.collectionView.register(TodoListCell.self)
         self.collectionView.register(CategoryCell.self)
         self.collectionView.register(PlanListCell.self)
+        self.collectionView.register(MemoListCell.self)
         self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
         
         self.collectionView.delegate = nil
@@ -164,6 +169,9 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 32)
         case .planCell(_):
             return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
+        case .memoCell(_):
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
+            
         }
     }
     

@@ -22,6 +22,7 @@ public struct HomeSection {
 public enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
     case planCell(PlanListCellReactor)
+    case memoCell(MemoListCellReactor)
     case categoryCell([String])
     // ...
 }
