@@ -137,9 +137,7 @@ public class HomeViewController: UICollectionViewController {
                 guard let self = self else { return }
                 let viewController = self.routing.addMemoViewController { [weak self] memo in
                     guard let self = self else { return }
-                    // 메모 create 성공
-                    print("Success insert into Memo: \(memo)")
-                    // self?.memoRepository.fetch()
+                   
                     Observable.just(memo)
                         .map { HomeViewReactor.Action.addMemo($0) }
                         .bind(to: self.reactor.action)

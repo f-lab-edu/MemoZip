@@ -63,17 +63,10 @@ public class HomeViewReactor: Reactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .initiate:
-            return Observable.merge(
-                self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
-                self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
-            )
-            /*
-             return Observable.concat(
-                 self.todoRepository.fetch().map {.update(todos: $0, plans: [Plan]())},
-                 self.planRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
-             )
-             
-             */
+            return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                .map { todos, plans in
+                    Mutation.update(todos: todos, plans: plans)
+                }
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
@@ -85,14 +78,14 @@ public class HomeViewReactor: Reactor {
                 Observable.just(Mutation.showAddViewController(nil))
             ])
         case .addMemo(let memo):
-            guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))} // ?
+            guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))}
             
             return Observable.concat(
                 Observable.just(Mutation.saveMemo(memo)),
-                Observable.merge(
-                    self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
-                    self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
-                )
+                Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                    .map { todos, plans in
+                        Mutation.update(todos: todos, plans: plans)
+                    }
             )
         }
     }
@@ -101,6 +94,9 @@ public class HomeViewReactor: Reactor {
         var newState = state
         switch mutation {
         case let .update(todos, plans):
+            // section 초기화
+            sections = []
+            
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
@@ -117,17 +113,9 @@ public class HomeViewReactor: Reactor {
             let todoList = HomeSection(header: "Todo", items: todoCells)
             let planList = HomeSection(header: "Plan", items: categoryCells)
             
-            if !todos.isEmpty {
-                sections.append(todoList)
-            }
+            sections.append(todoList)
+            sections.append(planList)
             
-            if !plans.isEmpty {
-                sections.append(planList)
-            }
-            
-            if sections.count > 2 {
-                sections.removeFirst()
-            }
             newState.sections = sections
             
         case .setSelectedIndexPath(let indexPath):
