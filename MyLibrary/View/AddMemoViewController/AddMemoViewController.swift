@@ -10,7 +10,6 @@ import UIKit
 import TinyConstraints
 import RxSwift
 import Repository
-import RepositoryImp
 import FMDB
 import ReactorKit
 

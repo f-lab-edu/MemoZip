@@ -10,10 +10,10 @@ import Foundation
 // TODO: Header 추가
 public struct HomeSection {
     public var header: String
-    public var items: [Item]
+    public var items: [HomeSectionItem]
     public var identity: String
     
-    public init(header: String, items: [Item]) {
+    public init(header: String, items: [HomeSectionItem]) {
         self.header = header
         self.items = items
         self.identity = UUID().uuidString
