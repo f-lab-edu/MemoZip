@@ -25,19 +25,22 @@ public class HomeViewReactor: Reactor {
     public enum Action {
         case initiate
         case cellSelected(IndexPath)
-        case addItem(IndexPath)
+        case moveToAddMemo(IndexPath)
+        case addMemo(String)
     }
     
     public enum Mutation {
         case update(todos: [Todo], plans: [Memo])//[Plan])
         case setSelectedIndexPath(IndexPath?)
         case showAddViewController(IndexPath?)
+        case saveMemo(String)
     }
     
     public struct State {
         public var selectedIndexPath: IndexPath?
         public var sections: [HomeSection]
         public var move: IndexPath?
+        public var memonContent: String?
     }
     
     private let todoRepository: TodoRepository
@@ -60,27 +63,30 @@ public class HomeViewReactor: Reactor {
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .initiate:
-            return Observable.concat(
-                self.todoRepository.fetch().map {.update(todos: $0, plans: [Memo]())},
-                self.memoRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
-            )
-            /*
-             return Observable.concat(
-                 self.todoRepository.fetch().map {.update(todos: $0, plans: [Plan]())},
-                 self.planRepository.fetch().map {.update(todos: [Todo](), plans: $0)}
-             )
-             
-             */
+            return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                .map { todos, plans in
+                    Mutation.update(todos: todos, plans: plans)
+                }
         case .cellSelected(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.setSelectedIndexPath(indexPath)),
                 Observable.just(Mutation.setSelectedIndexPath(nil))
             ])
-        case .addItem(let indexPath):
+        case .moveToAddMemo(let indexPath):
             return Observable.concat([
                 Observable.just(Mutation.showAddViewController(indexPath)),
                 Observable.just(Mutation.showAddViewController(nil))
             ])
+        case .addMemo(let memo):
+            guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))}
+            
+            return Observable.concat(
+                Observable.just(Mutation.saveMemo(memo)),
+                Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                    .map { todos, plans in
+                        Mutation.update(todos: todos, plans: plans)
+                    }
+            )
         }
     }
     
@@ -88,6 +94,9 @@ public class HomeViewReactor: Reactor {
         var newState = state
         switch mutation {
         case let .update(todos, plans):
+            // section 초기화
+            sections = []
+            
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
             }
@@ -104,19 +113,17 @@ public class HomeViewReactor: Reactor {
             let todoList = HomeSection(header: "Todo", items: todoCells)
             let planList = HomeSection(header: "Plan", items: categoryCells)
             
-            if !todos.isEmpty {
-                sections.append(todoList)
-            }
+            sections.append(todoList)
+            sections.append(planList)
             
-            if !plans.isEmpty {
-                sections.append(planList)
-            }
             newState.sections = sections
             
         case .setSelectedIndexPath(let indexPath):
             newState.selectedIndexPath = indexPath
         case .showAddViewController(let indexPath):
             newState.move = indexPath
+        case .saveMemo(let memo):
+            newState.memonContent = memo
         }
         return newState
     }

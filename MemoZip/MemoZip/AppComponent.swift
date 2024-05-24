@@ -23,12 +23,20 @@ final class AppComponent: AppRouting {
             planRepository: self.planRepository,
             memoRepository: self.memoRepository
         )
-        return HomeViewController(reactor: reactor, routing: self, memoRepository: memoRepository)
+        return HomeViewController(reactor: reactor, routing: self)
     }
     
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController {
         let addMemoVC = AddMemoViewController()
         addMemoVC.messageHandler = messageHandler
         return addMemoVC
+    }
+    
+    func addReadingViewController() -> UICollectionViewController {
+        let reactor = ReadingViewReactor(
+            planRepository: self.planRepository
+        )
+        let addReadingVC = AddReadingViewController(reactor: reactor)
+        return addReadingVC
     }
 }

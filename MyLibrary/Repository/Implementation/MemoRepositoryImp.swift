@@ -62,6 +62,7 @@ public class MemoRepositoryImp: MemoRepository {
     public func update() {}
 
     public func delete() -> Bool {
+        /*
         do {
             let sql = "DELETE FROM memo"
             
@@ -71,7 +72,8 @@ public class MemoRepositoryImp: MemoRepository {
             print("Delete Error : \(error.localizedDescription)")
             return false
         }
-        
+        */
+        return true
     }
 }
 /**

@@ -18,7 +18,7 @@ import Repository
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
-    
+    func addReadingViewController() -> UICollectionViewController
 }
 
 public class HomeViewController: UICollectionViewController {
@@ -28,7 +28,6 @@ public class HomeViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     private let routing: HomeRouting
-    private let memoRepository: MemoRepository
     
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
     lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
@@ -65,7 +64,7 @@ public class HomeViewController: UICollectionViewController {
             header.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
-                    self.reactor.action.onNext(.addItem(indexPath))
+                    self.reactor.action.onNext(.moveToAddMemo(indexPath))
                 })
                 .disposed(by: header.disposeBag)
             
@@ -76,10 +75,9 @@ public class HomeViewController: UICollectionViewController {
         }
     })
     
-    public init(reactor: HomeViewReactor, routing: HomeRouting, memoRepository: MemoRepository) {
+    public init(reactor: HomeViewReactor, routing: HomeRouting) {
         self.reactor = reactor
         self.routing = routing
-        self.memoRepository = memoRepository // FIXME: 수정
         let layout = UICollectionViewFlowLayout()
         super.init(collectionViewLayout: layout)
     }
@@ -135,14 +133,34 @@ public class HomeViewController: UICollectionViewController {
             .compactMap{ $0 }
             .subscribe(onNext: { [weak self ] indexPath in
                 guard let self = self else { return }
-                let viewController = self.routing.addMemoViewController { [weak self] memo in
-                    if self?.memoRepository.create(content: memo) ?? false {
-                        // 메모 create 성공
-                        print("Success insert into Memo: \(memo)")
-                        // self?.memoRepository.fetch()
+                
+                // ActionSheet 설정 (카테고리 선택 후 item 추가)
+                let actionsheetController = UIAlertController(title: "작성하실 형식을 선택해주세요.", message: "", preferredStyle: .actionSheet)
+                
+                let actionMemo = UIAlertAction(title: "메모", style: .default, handler: { _ in
+                    let viewController = self.routing.addMemoViewController { [weak self] memo in
+                        guard let self = self else { return }
+                       
+                        Observable.just(memo)
+                            .map { HomeViewReactor.Action.addMemo($0) }
+                            .bind(to: self.reactor.action)
+                            .disposed(by: self.disposeBag)
                     }
-                }
-                self.present(viewController, animated: true)
+                    self.present(viewController, animated: true)
+                })
+                let actionBook = UIAlertAction(title: "독서계획", style: .default, handler: { _ in
+                    let viewController = self.routing.addReadingViewController()
+                    self.present(viewController, animated: true)
+                })
+
+                let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+
+                actionsheetController.addAction(actionMemo)
+                actionsheetController.addAction(actionBook)
+                actionsheetController.addAction(actionCancel)
+                
+                self.present(actionsheetController, animated: true)
+                
             }).disposed(by: disposeBag)
         
         
