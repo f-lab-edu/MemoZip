@@ -10,18 +10,21 @@ final class AppComponent: AppRouting {
     private let todoRepository: TodoRepository
     private let planRepository: PlanRepository
     private let memoRepository: MemoRepository
+    private let bookRepository: BookRepository
     
     init() {
         self.todoRepository = TodoRepositoryImp()
         self.planRepository = PlanRepositoryImp()
         self.memoRepository = MemoRepositoryImp()
+        self.bookRepository = BookRepositoryImp()
     }
     
     func homeViewController() -> UIViewController {
         let reactor = HomeViewReactor(
             todoRepository: self.todoRepository,
             planRepository: self.planRepository,
-            memoRepository: self.memoRepository
+            memoRepository: self.memoRepository,
+            bookRepository: self.bookRepository
         )
         return HomeViewController(reactor: reactor, routing: self)
     }
