@@ -20,3 +20,8 @@ public enum Plan {
         self = .book(book)
     }
 }
+
+public enum PlanType: Int {
+    case memo
+    case book
+}

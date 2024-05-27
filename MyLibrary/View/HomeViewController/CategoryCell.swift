@@ -9,11 +9,18 @@ import ReactorKit
 import TinyConstraints
 
 class CategoryCell: UICollectionViewCell {
+    // MARK: - Properties
+    private var items = [String]()      // 카테고리 배열
+    var selectedIndex: Int?             // 선택된 카테고리
+    var selectedHandler: ((Int) -> ())? // 선택된 카테고리 Handler
+    
     // MARK: - view
-    private var items = [String]()
     var segmentedControlButtons = [UIButton]()
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        segmentedControlButtons.forEach { $0.removeFromSuperview() }
+                segmentedControlButtons.removeAll()
     }
     
     override init(frame: CGRect) {
@@ -24,7 +31,36 @@ class CategoryCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func initCellWithItems(items: [String]) {
+        
+        self.items = items
+        self.segmentedControlButtons = self.items.enumerated().map { index, item in
+            let button = UIButton().createSegmentedControlButton(setTitle: item)
+            button.tag = index
+            return button
+        }
+        
+        configureCustomsegmentedControl()
+        
+        let originalHandler = selectedHandler
+        selectedHandler = nil
+        
+        // default checked: 선택 카테고리 항목 선택으로 초기화 (default: 0)
+        handleSegmentedControlButtons(sender: segmentedControlButtons[selectedIndex ?? 0])
+        
+        selectedHandler = originalHandler
+    }
+    
+    // segmentedControl 버튼이 눌렸을 때
     @objc func handleSegmentedControlButtons(sender: UIButton) {
+        
+        let newIndex = sender.tag
+        
+        guard selectedIndex != newIndex else {
+            return // 같은 인덱스를 다시 선택하지 않음
+        }
+        
+        selectedIndex = newIndex
         
         for button in segmentedControlButtons {
             if button == sender {
@@ -37,22 +73,14 @@ class CategoryCell: UICollectionViewCell {
                 }
             }
         }
+        
+        
+        // 선택된 카테고리 전송
+        selectedHandler?(newIndex) // 새로운 인덱스만 전달
     }
     
-    func initCellWithItems(items: [String]) {
-        
-        self.items = items
-        self.segmentedControlButtons = self.items.map { UIButton().createSegmentedControlButton(setTitle: $0) }
-        
-        configureCustomsegmentedControl()
-        
-        // default checked : 카테고리 첫째 항목 선택으로 초기화
-        handleSegmentedControlButtons(sender: segmentedControlButtons[0])
-    }
-    
+    // cell 안의 segmentedControl setting
     private func configureCustomsegmentedControl() {
-        
-        print("configureCustomsegmentedControl")
         segmentedControlButtons.forEach { $0.addTarget(self, action: #selector(handleSegmentedControlButtons(sender:)), for: .touchUpInside)}
         
         let stackView = UIStackView(arrangedSubviews: segmentedControlButtons)
@@ -87,6 +115,7 @@ extension UIButton {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(to, for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemGray5
         button.widthAnchor.constraint(equalToConstant: 90).isActive = true
         button.heightAnchor.constraint(equalToConstant: 32).isActive = true
         button.backgroundColor = UIColor.init(white: 0.1, alpha: 0.1)
