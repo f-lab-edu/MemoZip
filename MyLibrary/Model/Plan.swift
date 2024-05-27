@@ -7,11 +7,16 @@
 
 import Foundation
 
-public struct Plan {
+public enum Plan {
+    case memo(Memo)
+    case book(Book)
     
-    public var title: String
+    // 생성자 정의
+    public init(memo: Memo) {
+        self = .memo(memo)
+    }
     
-    public init(title: String) {
-        self.title = title
+    public init(book: Book) {
+        self = .book(book)
     }
 }

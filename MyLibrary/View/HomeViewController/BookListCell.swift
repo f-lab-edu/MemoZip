@@ -1,5 +1,5 @@
 //
-//  PlanListCell.swift
+//  BookListCell.swift
 //
 //
 //  Created by 박세라 on 4/3/24.
@@ -8,9 +8,9 @@ import UIKit
 import ReactorKit
 import ViewModel
 
-class PlanListCell: UICollectionViewCell, View {
+class BookListCell: UICollectionViewCell, View {
     
-    typealias Reactor = PlanListCellReactor
+    typealias Reactor = BookListCellReactor
     
     // MARK: - Property
     var disposeBag = DisposeBag()
@@ -33,8 +33,6 @@ class PlanListCell: UICollectionViewCell, View {
         [titleLabel, d_dayLabel, progressView, progressBaseView].forEach {
             self.addSubview($0)
         }
-        
-        self.backgroundColor = UIColor.randomColor()
     
         titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         titleLabel.numberOfLines = 2
@@ -75,10 +73,12 @@ class PlanListCell: UICollectionViewCell, View {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: PlanListCellReactor) {
+    func bind(reactor: BookListCellReactor) {
         // 부분 cornerRadius 적용
         self.roundCorners(cornerRadius: 12, maskedCorners: [.layerMaxXMaxYCorner, .layerMaxXMinYCorner])
         self.titleLabel.text = reactor.currentState.title
+        self.d_dayLabel.text = "" // TODO: dday로직 추가
+        self.backgroundColor = UIColor(hex: reactor.currentState.colorCode, alpha: 1.0)
     }
 }
     

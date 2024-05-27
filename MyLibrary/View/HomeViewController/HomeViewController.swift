@@ -41,8 +41,8 @@ public class HomeViewController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(CategoryCell.self, for: indexPath)
             cell.initCellWithItems(items: items)
             return cell
-        case .planCell(let reactor):
-            let cell = collectionView.dequeueReusableCell(PlanListCell.self, for: indexPath)
+        case .bookCell(let reactor):
+            let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
         case .memoCell(let reactor):
@@ -100,7 +100,7 @@ public class HomeViewController: UICollectionViewController {
     private func initCollectionView() {
         self.collectionView.register(TodoListCell.self)
         self.collectionView.register(CategoryCell.self)
-        self.collectionView.register(PlanListCell.self)
+        self.collectionView.register(BookListCell.self)
         self.collectionView.register(MemoListCell.self)
         self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
         
@@ -185,7 +185,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
         case .categoryCell(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 32)
-        case .planCell(_):
+        case .bookCell(_):
             return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
         case .memoCell(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
