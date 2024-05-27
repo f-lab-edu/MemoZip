@@ -24,14 +24,14 @@ public class HomeViewReactor: Reactor {
     // MARK: - Constants
     public enum Action {
         case initiate
-        case categorySelected(Int)
+        case planTypeSelected(PlanType)
         case cellSelected(IndexPath)
         case moveToAddMemo(IndexPath)
         case addMemo(String)
     }
     
     public enum Mutation {
-        case update(todos: [Todo], plans: [Plan])
+        case update(todos: [Todo], plans: [Plan], selectedPlanType: PlanType? = nil)
         case setSelectedIndexPath(IndexPath?)
         case showAddViewController(IndexPath?)
         case saveMemo(String)
@@ -40,7 +40,7 @@ public class HomeViewReactor: Reactor {
     public struct State {
         public var selectedIndexPath: IndexPath?
         public var sections: [HomeSection]
-        public var selectedCategory: Int? = 0
+        public var selectedPlanType: PlanType = .memo
         public var move: IndexPath?
         public var memonContent: String?
     }
@@ -49,8 +49,6 @@ public class HomeViewReactor: Reactor {
     private let planRepository: PlanRepository
     private let memoRepository: MemoRepository
     private let bookRepository: BookRepository
-    
-    private var sections = [HomeSection]()
     
     public init(todoRepository: TodoRepository, planRepository: PlanRepository, memoRepository: MemoRepository, bookRepository: BookRepository) {
         self.todoRepository = todoRepository
@@ -69,21 +67,19 @@ public class HomeViewReactor: Reactor {
         case .initiate: // 초기화 시에는 memo만 load
             return Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
                 .map { todos, memos, books in
-                    Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) } )
+                    Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
                 }
-        case .categorySelected(let planType):
+        case .planTypeSelected(let planType):
             return Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
                 .map { todos, memos, books in
                     let plans: [Plan]
                     switch planType {
-                    case PlanType.memo.rawValue:
+                    case .memo:
                         plans = memos.map { Plan(memo: $0) }
-                    case PlanType.book.rawValue:
+                    case .book:
                         plans = books.map { Plan(book: $0) }
-                    default:
-                        fatalError("Unknown planType")
                     }
-                    return Mutation.update(todos: todos, plans: plans)
+                    return Mutation.update(todos: todos, plans: plans, selectedPlanType: planType)
                 }
         case .cellSelected(let indexPath):
             return Observable.concat([
@@ -111,9 +107,11 @@ public class HomeViewReactor: Reactor {
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .update(todos, plans):
-            // section 초기화
-            sections = []
+        case let .update(todos, plans, planType):
+            if let planType = planType {
+                newState.selectedPlanType = planType
+            }
+            var sections = [HomeSection]()
             
             let todoCells = todos.map {
                 HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
@@ -130,7 +128,7 @@ public class HomeViewReactor: Reactor {
             }
             
             // TODO: Category도 Model화 작업 예정.
-            var categoryCells = [HomeSectionItem.categoryCell(["메모", "독서"])] // FIXME: 카테고리 설정
+            var categoryCells = [HomeSectionItem.planTypesCell(newState.selectedPlanType)]
             
             categoryCells.append(contentsOf: planCells)
             

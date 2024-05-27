@@ -21,7 +21,7 @@ public enum Plan {
     }
 }
 
-public enum PlanType: Int {
+public enum PlanType: CaseIterable {
     case memo
     case book
 }
