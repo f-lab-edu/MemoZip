@@ -4,6 +4,7 @@
 //
 //  Created by 박세라 on 5/27/24.
 //
+// 독서 - 커버 색상 선택 목록 Cell
 
 import UIKit
 import ReactorKit
@@ -11,7 +12,7 @@ import ViewModel
 
 import TinyConstraints
 
-class BookColorCell: UICollectionViewListCell, View {
+final class BookColorCell: UICollectionViewListCell, View {
     
     typealias Reactor = BookColorCellReactor
     
@@ -39,13 +40,14 @@ class BookColorCell: UICollectionViewListCell, View {
         layout.scrollDirection = .horizontal
         self.palletView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        
         super.init(frame: frame)
-        
+        setupViews()
+    }
+    
+    private func setupViews() {
         [palletView, titleLabel].forEach {
             self.contentView.addSubview($0)
         }
-        
         
         palletView.height(48)
         palletView.leadingToSuperview()
@@ -80,7 +82,7 @@ extension BookColorCell: UICollectionViewDelegateFlowLayout, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(ColorChipCell.self, for: indexPath)
-        cell.initCell(colorCode: colorCodes[indexPath.item])
+        cell.configure(colorCode: colorCodes[indexPath.item])
         cell.checkView.isHidden = !(indexPath == selectedIndexPath)
         
         return cell

@@ -17,13 +17,22 @@ import ViewModel
 import Repository
 
 
-public class AddReadingViewController: UICollectionViewController {
+final class AddReadingViewController: UICollectionViewController {
     // MARK: UI
     lazy var xButton: UIButton = {
         let button = UIButton()
         let xMarkImage = UIImage(systemName: "xmark")?.withTintColor(.white, renderingMode: .alwaysOriginal)
         button.setImage(xMarkImage, for: .normal)
         button.addTarget(self, action: #selector(tappedXButton), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var okButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("확인", for: .normal)
+        button.backgroundColor = .systemGray3
+        button.layer.cornerRadius = 12
+        button.addTarget(self, action: #selector(tappedOKButton), for: .touchUpInside)
         return button
     }()
     
@@ -40,8 +49,30 @@ public class AddReadingViewController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(BookTitleCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
+        case .dateCell:
+            let cell = collectionView.dequeueReusableCell(BookDateCell.self, for: indexPath)
+            return cell
+        case .pageCell:
+            let cell = collectionView.dequeueReusableCell(BookPageCell.self, for: indexPath)
+            cell.showAlertAction = { [weak self] in
+                guard let self = self else { return }
+                self.sendPage(dataHandler: { result in
+                    guard let startPageStr = result["startPage"] as? String,
+                          let endPageStr = result["endPage"] as? String,
+                          let startPage = Int(startPageStr),
+                          let endPage = Int(endPageStr)
+                    else {
+                        return
+                    }
+                    cell.updatePage(startPage: startPage, endPage: endPage)
+                })
+            }
+            return cell
         case .colorCell:
             let cell = collectionView.dequeueReusableCell(BookColorCell.self, for: indexPath)
+            return cell
+        case .progressFormCell:
+            let cell = collectionView.dequeueReusableCell(BookProgressFormCell.self, for: indexPath)
             return cell
         }
     })
@@ -68,17 +99,30 @@ public class AddReadingViewController: UICollectionViewController {
     private func initView() {
         initCollectionView()
         
+        
+        [xButton, okButton].forEach {
+            self.view.addSubview($0)
+        }
+        
         // 닫기버튼 설정
-        view.addSubview(xButton)
         xButton.topToSuperview(offset: 16)
         xButton.trailingToSuperview(offset: 16)
         xButton.height(24)
         xButton.width(24)
+        
+        // 확인버튼 설정
+        okButton.bottomToSuperview(offset: -16, usingSafeArea: true)
+        okButton.centerXToSuperview()
+        okButton.height(48)
+        okButton.width(UIScreen.main.bounds.width - 32.0)
     }
     
     private func initCollectionView() {
         self.collectionView.register(BookTitleCell.self)
+        self.collectionView.register(BookDateCell.self)
+        self.collectionView.register(BookPageCell.self)
         self.collectionView.register(BookColorCell.self)
+        self.collectionView.register(BookProgressFormCell.self)
         
         self.collectionView.delegate = nil
         self.collectionView.dataSource = nil
@@ -103,6 +147,39 @@ public class AddReadingViewController: UICollectionViewController {
     @objc func tappedXButton() {
         self.dismiss(animated: true)
     }
+    
+    @objc func tappedOKButton() {
+        
+        self.dismiss(animated: true)
+    }
+    
+    private func sendPage(dataHandler: @escaping ([String: Any]) -> ()) {
+        let alertController = UIAlertController(title: "페이지 입력", message: "읽은 페이지를 입력해주세요", preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "읽은 페이지"
+            textField.keyboardType = .numberPad
+        }
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "총 페이지 수"
+            textField.keyboardType = .numberPad
+        }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let saveAction = UIAlertAction(title: "저장", style: .default) { _ in
+            guard let startPage = alertController.textFields?[0].text,
+                  let endPage = alertController.textFields?[1].text else {
+                return
+            }
+            dataHandler(["startPage": startPage, "endPage": endPage])
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
 }
 
 extension AddReadingViewController: UICollectionViewDelegateFlowLayout {
@@ -111,6 +188,10 @@ extension AddReadingViewController: UICollectionViewDelegateFlowLayout {
         
         switch dataSource.sectionModels[indexPath.section].items[indexPath.item] {
         case .titleCell(_):
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
+        case .dateCell, .progressFormCell:
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 72)
+        case .pageCell:
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
         case .colorCell:
             return CGSize(width: UIScreen.main.bounds.width, height: 72)

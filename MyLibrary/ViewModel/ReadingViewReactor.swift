@@ -46,7 +46,10 @@ public class ReadingViewReactor: Reactor {
             let sections: [ReadingSection] = [
                 ReadingSection(header: "Books", items: [
                     .titleCell(BookTitleCellReactor(state: Book(title: "안녕", colorCode: "111111"))),
-                    .colorCell
+                    .dateCell,
+                    .pageCell,
+                    .colorCell,
+                    .progressFormCell
                 ])
             ]
             return Observable.just(.setSections(sections))

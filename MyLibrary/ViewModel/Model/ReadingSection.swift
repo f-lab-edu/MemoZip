@@ -23,7 +23,10 @@ public struct ReadingSection {
 
 public enum ReadingSectionItem {
     case titleCell(BookTitleCellReactor)
+    case dateCell
+    case pageCell
     case colorCell
+    case progressFormCell
     // ...
 }
 
