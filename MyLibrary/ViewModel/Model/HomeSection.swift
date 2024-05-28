@@ -4,8 +4,9 @@
 //
 //  Created by 박세라 on 4/1/24.
 //
-import RxDataSources
+import Model
 import Foundation
+import RxDataSources
 
 // TODO: Header 추가
 public struct HomeSection {
@@ -21,9 +22,10 @@ public struct HomeSection {
 }
 public enum HomeSectionItem {
     case defaultCell(TodoListCellReactor)
+    case categoryCell([String])
+    case planTypesCell(PlanType)
     case bookCell(BookListCellReactor)
     case memoCell(MemoListCellReactor)
-    case categoryCell([String])
     // ...
 }
 
