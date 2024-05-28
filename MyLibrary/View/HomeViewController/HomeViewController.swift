@@ -42,7 +42,15 @@ public class HomeViewController: UICollectionViewController {
             cell.initCellWithItems(items: items)
             cell.selectedHandler = { [weak self] catIndex in // 선택된 카테고리 index
                 guard let self = self else { return }
-                self.reactor.action.onNext(.categorySelected(catIndex))
+                let selectedPlanType = PlanType.allCases[catIndex]
+                self.reactor.action.onNext(.planTypeSelected(selectedPlanType))
+            }
+            return cell
+        case let .planTypesCell(planType):
+            let cell = collectionView.dequeueReusableCell(PlanTypesCell.self, for: indexPath)
+            cell.configure(selectedPlanType: planType)
+            cell.selectionHandler = { [weak self] selectedPlanType in // 선택된 카테고리 index
+                self?.reactor.action.onNext(.planTypeSelected(selectedPlanType))
             }
             return cell
         case .bookCell(let reactor):
@@ -104,6 +112,7 @@ public class HomeViewController: UICollectionViewController {
     private func initCollectionView() {
         self.collectionView.register(TodoListCell.self)
         self.collectionView.register(CategoryCell.self)
+        self.collectionView.register(PlanTypesCell.self)
         self.collectionView.register(BookListCell.self)
         self.collectionView.register(MemoListCell.self)
         self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
@@ -187,7 +196,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         switch dataSource.sectionModels[indexPath.section].items[indexPath.item] {
         case .defaultCell(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
-        case .categoryCell(_):
+        case .categoryCell, .planTypesCell:
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 32)
         case .bookCell(_):
             return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )

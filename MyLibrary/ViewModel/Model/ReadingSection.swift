@@ -23,6 +23,7 @@ public struct ReadingSection {
 
 public enum ReadingSectionItem {
     case titleCell(BookTitleCellReactor)
+    case colorCell
     // ...
 }
 
