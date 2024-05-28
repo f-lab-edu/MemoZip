@@ -40,6 +40,10 @@ public class HomeViewController: UICollectionViewController {
         case .categoryCell(let items):
             let cell = collectionView.dequeueReusableCell(CategoryCell.self, for: indexPath)
             cell.initCellWithItems(items: items)
+            cell.selectedHandler = { [weak self] catIndex in // 선택된 카테고리 index
+                guard let self = self else { return }
+                self.reactor.action.onNext(.categorySelected(catIndex))
+            }
             return cell
         case .bookCell(let reactor):
             let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
