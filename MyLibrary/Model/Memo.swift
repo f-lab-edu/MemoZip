@@ -9,9 +9,11 @@ import Foundation
 
 public struct Memo {
     
+    public var memo_id: Int32
     public var content: String
     
-    public init(content: String) {
+    public init(memo_id: Int32, content: String) {
+        self.memo_id = memo_id
         self.content = content
     }
 }

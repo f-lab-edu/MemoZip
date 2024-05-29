@@ -155,7 +155,6 @@ public class AddReadingViewController: UICollectionViewController {
     }
     
     @objc func tappedOKButton() {
-        print("Book Info: \(book)")
         dataHandler?(book)
         self.dismiss(animated: true)
     }

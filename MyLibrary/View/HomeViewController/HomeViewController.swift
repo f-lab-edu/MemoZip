@@ -60,6 +60,12 @@ public class HomeViewController: UICollectionViewController {
         case .memoCell(let reactor):
             let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
             cell.reactor = reactor
+            cell.deleteButton.rx.tap
+                .subscribe(onNext: { [weak self] in
+                    guard let self = self else { return }
+                    self.reactor.action.onNext(.deleteMemo(indexPath))
+                })
+                .disposed(by: self.disposeBag)
             return cell
         }
     }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in

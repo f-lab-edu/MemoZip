@@ -43,7 +43,6 @@ public class BookRepositoryImp: BookRepository {
         } catch let error as NSError {
             print("failed: \(error.localizedDescription)")
         }
-        print("bookList: \(bookList)")
         return .just(bookList)
         /*
          return .just([
@@ -55,7 +54,7 @@ public class BookRepositoryImp: BookRepository {
     
     
     public func create(book: Book) -> Bool {
-        print("create(book:\(book)")
+        
         do {
             let sql = """
          INSERT INTO book (bookTitle, startDate, endDate, startPage, endPage, colorCode, isDisplayDday)

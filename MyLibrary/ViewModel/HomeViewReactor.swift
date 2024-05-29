@@ -29,6 +29,7 @@ public class HomeViewReactor: Reactor {
         case moveToAddMemo(IndexPath)
         case addMemo(String)
         case addBook(Book)
+        case deleteMemo(IndexPath)
     }
     
     public enum Mutation {
@@ -103,7 +104,6 @@ public class HomeViewReactor: Reactor {
                     }
             )
         case .addBook(let book):
-            print("mutate addBook")
             guard self.bookRepository.create(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
                     .map { todos, books in
                         Mutation.update(todos: todos,
@@ -112,12 +112,37 @@ public class HomeViewReactor: Reactor {
                         )
                     }
             }
-            print("create 성공")
             return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
                 .map { todos, books in
                     Mutation.update(todos: todos,
                                     plans: books.map {Plan(book: $0)},
                                     selectedPlanType: .book
+                    )
+                }
+        case .deleteMemo(let indexPath):
+            var targetMemo: Memo?
+            
+            memoRepository.fetch()
+                .subscribe(onNext: { memos in
+                targetMemo = memos[indexPath.row]
+            })
+            
+            if let deleteId = targetMemo?.memo_id {
+                if memoRepository.delete(with: deleteId) {
+                    return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                        .map { todos, memos in
+                            Mutation.update(todos: todos,
+                                            plans: memos.map {Plan(memo: $0)},
+                                            selectedPlanType: .memo
+                            )
+                        }
+                }
+            }
+            return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                .map { todos, memos in
+                    Mutation.update(todos: todos,
+                                    plans: memos.map {Plan(memo: $0)},
+                                    selectedPlanType: .memo
                     )
                 }
         }
