@@ -10,7 +10,7 @@ import RxSwift
 
 public protocol BookRepository {
     func fetch() -> Observable<[Book]>
-    func create(content: String) -> Bool
+    func create(book: Book) -> Bool
     func update()
     func delete() -> Bool
 }

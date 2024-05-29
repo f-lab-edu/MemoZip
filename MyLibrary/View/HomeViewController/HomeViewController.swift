@@ -18,7 +18,7 @@ import Repository
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
-    func addReadingViewController() -> UICollectionViewController
+    func addReadingViewController(dataHandler: @escaping (Book) -> ()) -> UICollectionViewController
 }
 
 public class HomeViewController: UICollectionViewController {
@@ -162,7 +162,15 @@ public class HomeViewController: UICollectionViewController {
                     self.present(viewController, animated: true)
                 })
                 let actionBook = UIAlertAction(title: "독서계획", style: .default, handler: { _ in
-                    let viewController = self.routing.addReadingViewController()
+                    let viewController = self.routing.addReadingViewController() { [weak self] book in
+                        guard let self = self else { return }
+                        
+                        Observable.just(book)
+                            .map { HomeViewReactor.Action.addBook($0) }
+                            .bind(to: self.reactor.action)
+                            .disposed(by: self.disposeBag)
+                        
+                    }
                     self.present(viewController, animated: true)
                 })
 

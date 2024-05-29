@@ -28,6 +28,7 @@ public class HomeViewReactor: Reactor {
         case cellSelected(IndexPath)
         case moveToAddMemo(IndexPath)
         case addMemo(String)
+        case addBook(Book)
     }
     
     public enum Mutation {
@@ -96,11 +97,29 @@ public class HomeViewReactor: Reactor {
             
             return Observable.concat(
                 Observable.just(Mutation.saveMemo(memo)),
-                Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
-                    .map { todos, memos, books in
-                        Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) } + books.map {Plan(book: $0)})
+                Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                    .map { todos, memos in
+                        Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
                     }
             )
+        case .addBook(let book):
+            print("mutate addBook")
+            guard self.bookRepository.create(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                    .map { todos, books in
+                        Mutation.update(todos: todos,
+                                        plans: books.map {Plan(book: $0)},
+                                        selectedPlanType: .book
+                        )
+                    }
+            }
+            print("create 성공")
+            return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                .map { todos, books in
+                    Mutation.update(todos: todos,
+                                    plans: books.map {Plan(book: $0)},
+                                    selectedPlanType: .book
+                    )
+                }
         }
     }
     
