@@ -37,7 +37,7 @@ final class AppComponent: AppRouting {
     
     func addReadingViewController() -> UICollectionViewController {
         let reactor = ReadingViewReactor(
-            planRepository: self.planRepository
+            bookRepository: self.bookRepository
         )
         let addReadingVC = AddReadingViewController(reactor: reactor)
         return addReadingVC

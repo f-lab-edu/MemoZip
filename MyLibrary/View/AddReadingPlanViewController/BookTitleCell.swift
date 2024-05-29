@@ -13,17 +13,16 @@ import ViewModel
 import TinyConstraints
 
 
-final class BookTitleCell: UICollectionViewCell, View {
-    
-    typealias Reactor = BookTitleCellReactor
+final class BookTitleCell: UICollectionViewCell {
     
     // MARK: - Property
-    var disposeBag = DisposeBag()
+    var delegate: SendDelegate?
     
-    // MARK: - view
+    // MARK: - UI
     let titleLabel = UILabel()
     let bookTextField: UITextField = {
         let paddedTextField = PaddedTextField(padding: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
+        paddedTextField.placeholder = "책 제목을 입력해주세요."
         return paddedTextField
     }()
     
@@ -33,6 +32,7 @@ final class BookTitleCell: UICollectionViewCell, View {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        bookTextField.delegate = self
     }
     
     private func setupViews() {
@@ -63,6 +63,19 @@ final class BookTitleCell: UICollectionViewCell, View {
     }
     
     func bind(reactor: BookTitleCellReactor) {
-        
     }
+}
+
+extension BookTitleCell: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let text = textField.text, !text.isEmpty else { return }
+        delegate?.getValue(type: .titleCell, data: ["bookTitle" : text])
+    }
+    
+    // 입력이 시작되면 호출 (시점)
+    /*
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard let text = textField.text, !text.isEmpty else { return }
+        delegate?.getValue(type: .titleCell, data: ["bookTitle" : text])
+    }*/
 }

@@ -20,6 +20,7 @@ final class BookColorCell: UICollectionViewListCell, View {
     var disposeBag = DisposeBag()
     let colorCodes = BookColorType.allCases.map { $0.colorCode }
     var selectedIndexPath: IndexPath? // 선택된 셀의 인덱스를 저장하는 변수
+    var delegate: SendDelegate?
     
     // MARK: - view
     let palletView: UICollectionView
@@ -84,7 +85,6 @@ extension BookColorCell: UICollectionViewDelegateFlowLayout, UICollectionViewDel
         let cell = collectionView.dequeueReusableCell(ColorChipCell.self, for: indexPath)
         cell.configure(colorCode: colorCodes[indexPath.item])
         cell.checkView.isHidden = !(indexPath == selectedIndexPath)
-        
         return cell
     }
     
@@ -94,6 +94,7 @@ extension BookColorCell: UICollectionViewDelegateFlowLayout, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedIndexPath = indexPath
+        delegate?.getValue(type: .colorCell, data: ["colorCd": colorCodes[indexPath.item]])
         collectionView.reloadData()
     }
 }

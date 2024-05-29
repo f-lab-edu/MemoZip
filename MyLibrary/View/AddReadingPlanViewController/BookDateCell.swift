@@ -10,6 +10,12 @@ import UIKit
 import TinyConstraints
 
 final class BookDateCell: UICollectionViewCell {
+    // MARK: Properties
+    private let datePicker = UIDatePicker()
+    private var activeDateView: UIView?
+    var delegate: SendDelegate?
+    
+    // MARK: UI
     let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "독서기간"
@@ -39,9 +45,6 @@ final class BookDateCell: UICollectionViewCell {
         titleLabel.font = UIFont.systemFont(ofSize: 20)
         return titleLabel
     }()
-    
-    private let datePicker = UIDatePicker()
-    private var activeDateView: UIView?
     
     public override func prepareForReuse() {
     }
@@ -119,7 +122,8 @@ final class BookDateCell: UICollectionViewCell {
         dateFormatter.dateFormat = "yyyy.MM.dd"
         
         let dateLabel = UILabel()
-        dateLabel.text = dateFormatter.string(from: sender.date)
+        let dateString = dateFormatter.string(from: sender.date)
+        dateLabel.text = dateString
         dateLabel.textColor = .white
         dateLabel.font = UIFont.systemFont(ofSize: 16)
         
@@ -129,6 +133,8 @@ final class BookDateCell: UICollectionViewCell {
         dateLabel.centerYToSuperview()
         
         datePicker.isHidden = true
+   
+        delegate?.getValue(type: .dateCell, data: activeView == startDateView ? ["startDate" : dateString] : ["endDate" : dateString])
     }
     
     required init?(coder: NSCoder) {

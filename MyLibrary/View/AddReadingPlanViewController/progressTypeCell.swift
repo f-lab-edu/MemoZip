@@ -1,5 +1,5 @@
 //
-//  BookProgressFormCell.swift
+//  BookProgressTypeCell.swift
 //
 //
 //  Created by 박세라 on 5/28/24.
@@ -9,7 +9,10 @@
 import UIKit
 import TinyConstraints
 
-class BookProgressFormCell: UICollectionViewCell {
+import Model
+
+class BookProgressTypeCell: UICollectionViewCell {
+    // MARK: UI
     let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.text = "달성률 표기 방식 선택"
@@ -25,6 +28,8 @@ class BookProgressFormCell: UICollectionViewCell {
         segmentedControl.selectedSegmentIndex = 0 // 기본 선택 인덱스 설정
         return segmentedControl
     }()
+    
+    var delegate: SendDelegate?
     
     public override func prepareForReuse() {
     }
@@ -55,14 +60,7 @@ class BookProgressFormCell: UICollectionViewCell {
     }
     
     @objc private func segmentedControlValueChanged() {
-        switch pickView.selectedSegmentIndex {
-        case 0: // d-day
-            print("d-day 선택됨")
-        case 1: // 소수점 선택 시 처리할 코드
-            print("쪽수로 선택됨")
-        default:
-            break
-        }
+        delegate?.getValue(type: .progressTypeCell, data: ["progressType" : pickView.selectedSegmentIndex])
     }
     
     required init?(coder: NSCoder) {

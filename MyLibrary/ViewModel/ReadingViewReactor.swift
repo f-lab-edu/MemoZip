@@ -15,9 +15,7 @@ public class ReadingViewReactor: Reactor {
     
     // MARK: - Property
     public let initialState: State
-    
-    private let planRepository: PlanRepository // FIXME: 수정
-    
+    private let bookRepository: BookRepository
     private var sections = [ReadingSection]()
     
     // MARK: - Constant
@@ -33,8 +31,8 @@ public class ReadingViewReactor: Reactor {
         public var sections: [ReadingSection] = []
     }
     
-    public init(planRepository: PlanRepository){
-        self.planRepository = planRepository
+    public init(bookRepository: BookRepository){
+        self.bookRepository = bookRepository
         
         self.initialState = State()
     }
@@ -45,11 +43,11 @@ public class ReadingViewReactor: Reactor {
         case .initiate:
             let sections: [ReadingSection] = [
                 ReadingSection(header: "Books", items: [
-                    .titleCell(BookTitleCellReactor(state: Book(title: "안녕", colorCode: "111111"))),
+                    .titleCell,
                     .dateCell,
                     .pageCell,
                     .colorCell,
-                    .progressFormCell
+                    .progressTypeCell
                 ])
             ]
             return Observable.just(.setSections(sections))
@@ -61,9 +59,8 @@ public class ReadingViewReactor: Reactor {
         switch mutation {
         case .setSections(let sections):
             newState.sections = sections
+            return newState
         }
-        return newState
+        
     }
-    
-    
 }
