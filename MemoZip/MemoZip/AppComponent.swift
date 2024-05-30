@@ -3,6 +3,7 @@ import RepositoryImp
 import UIKit
 import ViewModel
 import View
+import Model
 
 typealias AppRouting = HomeRouting
 
@@ -35,11 +36,12 @@ final class AppComponent: AppRouting {
         return addMemoVC
     }
     
-    func addReadingViewController() -> UICollectionViewController {
+    func addReadingViewController(dataHandler: @escaping (Book) -> ()) -> UICollectionViewController {
         let reactor = ReadingViewReactor(
             bookRepository: self.bookRepository
         )
         let addReadingVC = AddReadingViewController(reactor: reactor)
+        addReadingVC.dataHandler = dataHandler
         return addReadingVC
     }
 }

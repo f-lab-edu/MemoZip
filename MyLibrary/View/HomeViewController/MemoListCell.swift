@@ -13,13 +13,19 @@ class MemoListCell: UICollectionViewCell, View {
 
     typealias Reactor = MemoListCellReactor
     
-    // MARK: - Property
+    // MARK: - Properties
     var disposeBag = DisposeBag()
     
-    // MARK: - view
+    // MARK: - UI
     let contentLabel = UILabel()
-
     let baseView = UIView()
+    let deleteButton: UIButton = {
+        let button = UIButton()
+        let deleteImage = UIImage(systemName: "x.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        button.setImage(deleteImage, for: .normal)
+        //button.addTarget(self, action: #selector(tappedDeleteButton), for: .touchUpInside)
+        return button
+    }()
     
     override func prepareForReuse() {
     }
@@ -27,11 +33,11 @@ class MemoListCell: UICollectionViewCell, View {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        [baseView, contentLabel].forEach {
-            self.addSubview($0)
+        [baseView, contentLabel, deleteButton].forEach {
+            self.contentView.addSubview($0)
         }
         
-        self.backgroundColor = .systemGray5 //UIColor.randomColor()
+        self.backgroundColor = .systemGray5
     
         baseView.leadingToSuperview(offset: 4)
         baseView.trailingToSuperview(offset: 4)
@@ -48,6 +54,9 @@ class MemoListCell: UICollectionViewCell, View {
         contentLabel.trailing(to: baseView, offset: 8)
         contentLabel.top(to: baseView, offset: 8)
         contentLabel.bottom(to: baseView, offset: -8)
+        
+        deleteButton.trailingToSuperview(offset: 16)
+        deleteButton.centerYToSuperview()
         
         bringSubviewToFront(contentLabel)
     }

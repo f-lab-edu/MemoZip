@@ -44,6 +44,7 @@ public class AddReadingViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     public var book: Book
+    public var dataHandler: ((Book)-> ())?
     
     typealias Reactor = ReadingViewReactor
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<ReadingSection>
@@ -154,7 +155,7 @@ public class AddReadingViewController: UICollectionViewController {
     }
     
     @objc func tappedOKButton() {
-        print("Book Info: \(book)")
+        dataHandler?(book)
         self.dismiss(animated: true)
     }
     
