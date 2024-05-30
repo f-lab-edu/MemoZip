@@ -24,6 +24,11 @@ class HeaderCell: UICollectionReusableView, View {
     var addButton = UIButton()
     // ...
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         

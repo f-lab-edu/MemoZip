@@ -7,6 +7,7 @@
 import Model
 import Foundation
 import RxDataSources
+import ViewModel
 
 // TODO: Header 추가
 public struct HomeSection {
@@ -25,8 +26,7 @@ public enum HomeSectionItem {
     case categoryCell([String])
     case planTypesCell(PlanType)
     case bookCell(BookListCellReactor)
-    case memoCell(MemoListCellReactor)
-    // ...
+    case memoCell(Memo)
 }
 
 extension HomeSection: SectionModelType {

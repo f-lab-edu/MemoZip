@@ -21,7 +21,7 @@ public protocol HomeRouting {
     func addReadingViewController(dataHandler: @escaping (Book) -> ()) -> UICollectionViewController
 }
 
-public class HomeViewController: UICollectionViewController {
+public class HomeViewController: UICollectionViewController, MemoListCellDelegate {
     
     typealias Reactor = HomeViewReactor
     
@@ -57,15 +57,10 @@ public class HomeViewController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
-        case .memoCell(let reactor):
+        case let .memoCell(memo):
             let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
-            cell.reactor = reactor
-            cell.deleteButton.rx.tap
-                .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
-                    self.reactor.action.onNext(.deleteMemo(indexPath))
-                })
-                .disposed(by: self.disposeBag)
+            cell.configure(with: memo.content)
+            cell.delegate = self
             return cell
         }
     }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
@@ -192,11 +187,42 @@ public class HomeViewController: UICollectionViewController {
         
         
         // ui
-        reactor.state.map { $0.sections }
-            .asObservable()
-            .bind(to: self.collectionView.rx.items(dataSource: dataSource))
-            .disposed(by: disposeBag)
+        reactor.state.map { state in
+            var sections = [HomeSection]()
+            
+            let todoCells = state.todos.map {
+                HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
+            }
+            let planCells: [HomeSectionItem]
+            switch state.selectedPlanType {
+            case .memo:
+                planCells = state.memos.map { HomeSectionItem.memoCell($0) }
+            case .book:
+                planCells = state.books.map { HomeSectionItem.bookCell(BookListCellReactor(state: $0)) }
+            }
+            
+//            var categoryCells = [HomeSectionItem.planTypesCell(state.selectedPlanType)]
+//            categoryCells.append(contentsOf: planCells)
+            
+            let todoList = HomeSection(header: "Todo", items: todoCells)
+            let planList = HomeSection(header: "Plan", items: planCells)
+            
+            sections.append(todoList)
+            sections.append(planList)
+            
+            return sections
+        }
+        .asObservable()
+        .bind(to: self.collectionView.rx.items(dataSource: dataSource))
+        .disposed(by: disposeBag)
         
+        
+    }
+    
+    func memoListDeleteTapped(of cell: UICollectionViewCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
+        let memo = self.reactor.currentState.memos[indexPath.item]
+        self.reactor.action.onNext(.deleteMemo(memo.memoId))
         
     }
     

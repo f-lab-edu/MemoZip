@@ -9,26 +9,18 @@ import UIKit
 import ReactorKit
 import ViewModel
 
-class MemoListCell: UICollectionViewCell, View {
+protocol MemoListCellDelegate: AnyObject {
+    func memoListDeleteTapped(of: UICollectionViewCell)
+}
 
-    typealias Reactor = MemoListCellReactor
-    
-    // MARK: - Properties
-    var disposeBag = DisposeBag()
+class MemoListCell: UICollectionViewCell {
     
     // MARK: - UI
     let contentLabel = UILabel()
     let baseView = UIView()
-    let deleteButton: UIButton = {
-        let button = UIButton()
-        let deleteImage = UIImage(systemName: "x.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        button.setImage(deleteImage, for: .normal)
-        //button.addTarget(self, action: #selector(tappedDeleteButton), for: .touchUpInside)
-        return button
-    }()
+    let deleteButton: UIButton = UIButton()
     
-    override func prepareForReuse() {
-    }
+    weak var delegate: MemoListCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,6 +47,9 @@ class MemoListCell: UICollectionViewCell, View {
         contentLabel.top(to: baseView, offset: 8)
         contentLabel.bottom(to: baseView, offset: -8)
         
+        let deleteImage = UIImage(systemName: "x.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        deleteButton.setImage(deleteImage, for: .normal)
+        deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
         deleteButton.trailingToSuperview(offset: 16)
         deleteButton.centerYToSuperview()
         
@@ -65,11 +60,14 @@ class MemoListCell: UICollectionViewCell, View {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: MemoListCellReactor) {
-        // 부분 cornerRadius 적용
+    func configure(with content: String) {
         self.layer.cornerRadius = 4
         self.baseView.layer.cornerRadius = 4
-        self.contentLabel.text = reactor.currentState.content
+        self.contentLabel.text = content
+    }
+    
+    @objc private func deleteTapped() {
+        self.delegate?.memoListDeleteTapped(of: self)
     }
 }
     

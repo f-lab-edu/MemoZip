@@ -63,7 +63,7 @@ public class MemoRepositoryImp: MemoRepository {
     public func update() {}
 
     public func delete(with memoId: Int32) -> Bool { // memoId로 삭제
-        
+        print("😀 Delete Memo in Repo")
         do {
             let sql = """
             DELETE FROM memo
