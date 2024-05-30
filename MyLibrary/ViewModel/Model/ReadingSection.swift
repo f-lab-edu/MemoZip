@@ -22,8 +22,11 @@ public struct ReadingSection {
 }
 
 public enum ReadingSectionItem {
-    case titleCell(BookTitleCellReactor)
+    case titleCell
+    case dateCell
+    case pageCell
     case colorCell
+    case progressTypeCell
     // ...
 }
 

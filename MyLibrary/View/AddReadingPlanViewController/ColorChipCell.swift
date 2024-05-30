@@ -4,6 +4,7 @@
 //
 //  Created by 박세라 on 5/27/24.
 //
+//  독서 - 커버 컬러칩 Cell
 
 import Foundation
 import UIKit
@@ -29,7 +30,10 @@ public class ColorChipCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        setupViews()
+    }
+    
+    private func setupViews() {
         [colorView, checkView].forEach {
             self.addSubview($0)
         }
@@ -51,7 +55,7 @@ public class ColorChipCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func initCell(colorCode: String) {
+    public func configure(colorCode: String) {
         colorView.backgroundColor = UIColor(hex: colorCode, alpha: 1.0)
     }
 }
