@@ -25,15 +25,16 @@ public class MemoRepositoryImp: MemoRepository {
         
         do {
             let sql = """
-              SELECT content
+              SELECT memo_id, content
               FROM memo
             """
             
             let rs = try self.dbManger.fmdb.executeQuery(sql, values: nil)
             
             while rs.next() {
+                let memo_id = rs.int(forColumn: "memo_id")
                 let memoContent = rs.string(forColumn: "content")
-                memoList.append(Memo(content: memoContent!))
+                memoList.append(Memo(memo_id: memo_id, content: memoContent!))
             }
         } catch let error as NSError {
             print("failed: \(error.localizedDescription)")
@@ -61,29 +62,18 @@ public class MemoRepositoryImp: MemoRepository {
 
     public func update() {}
 
-    public func delete() -> Bool {
-        /*
+    public func delete(with memo_id: Int32) -> Bool { // memo_id로 삭제
+        
         do {
-            let sql = "DELETE FROM memo"
-            
-            try self.dbManger.fmdb.executeStatements(sql)
+            let sql = """
+            DELETE FROM memo
+            WHERE memo_id = ?
+            """
+            try self.dbManger.fmdb.executeUpdate(sql, values: [memo_id])
             return true
         } catch let error as NSError {
             print("Delete Error : \(error.localizedDescription)")
             return false
         }
-        */
-        return true
     }
 }
-/**
- 
- public func fetch() -> Observable<[Memo]> {
-     return .just([
-         Memo(content: "첫번째 메모"),
-         Memo(content: "두번째 메모"),
-         Memo(content: "세번째 메모"),
-     ])
- }
- 
- */

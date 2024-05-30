@@ -15,8 +15,8 @@ public class PlanRepositoryImp: PlanRepository {
     public func fetch() -> Observable<[Plan]> {
         return .just([
             Plan(book: Book(title: "Clean Code", colorCode: "FFDAB9")),
-            Plan(book: Book(title: "개미", colorCode: "E6E6FA")),
-            Plan(memo: Memo(content: "메모입니다."))
+            Plan(book: Book(title: "개미", colorCode: "E6E6FA"))
+            //Plan(memo: Memo(memo_id: 0, content: "메모입니다."))
         ])
     }
 

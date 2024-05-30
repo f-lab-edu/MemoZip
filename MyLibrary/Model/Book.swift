@@ -17,8 +17,8 @@ public struct Book {
     public var isDisplayDday: Bool?
     
     public init(title: String = "제목없음", 
-                startDt: String = Date().formattedDate(from: Date(), to: "yyyy.MM.dd"),
-                endDt: String = Date().formattedDate(from: Date(), to: "yyyy.MM.dd"),
+                startDt: String? = Date().formattedDate(from: Date(), to: "yyyy.MM.dd"),
+                endDt: String? = Date().formattedDate(from: Date(), to: "yyyy.MM.dd"),
                 startPage: Int? = 0, endPage: Int? = 0,
                 colorCode: String = "000000",
                 isDisplayDday: Bool? = true) {

@@ -28,6 +28,8 @@ public class HomeViewReactor: Reactor {
         case cellSelected(IndexPath)
         case moveToAddMemo(IndexPath)
         case addMemo(String)
+        case addBook(Book)
+        case deleteMemo(IndexPath)
     }
     
     public enum Mutation {
@@ -96,11 +98,53 @@ public class HomeViewReactor: Reactor {
             
             return Observable.concat(
                 Observable.just(Mutation.saveMemo(memo)),
-                Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
-                    .map { todos, memos, books in
-                        Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) } + books.map {Plan(book: $0)})
+                Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                    .map { todos, memos in
+                        Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
                     }
             )
+        case .addBook(let book):
+            guard self.bookRepository.create(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                    .map { todos, books in
+                        Mutation.update(todos: todos,
+                                        plans: books.map {Plan(book: $0)},
+                                        selectedPlanType: .book
+                        )
+                    }
+            }
+            return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                .map { todos, books in
+                    Mutation.update(todos: todos,
+                                    plans: books.map {Plan(book: $0)},
+                                    selectedPlanType: .book
+                    )
+                }
+        case .deleteMemo(let indexPath):
+            var targetMemo: Memo?
+            
+            memoRepository.fetch()
+                .subscribe(onNext: { memos in
+                targetMemo = memos[indexPath.row]
+            })
+            
+            if let deleteId = targetMemo?.memo_id {
+                if memoRepository.delete(with: deleteId) {
+                    return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                        .map { todos, memos in
+                            Mutation.update(todos: todos,
+                                            plans: memos.map {Plan(memo: $0)},
+                                            selectedPlanType: .memo
+                            )
+                        }
+                }
+            }
+            return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
+                .map { todos, memos in
+                    Mutation.update(todos: todos,
+                                    plans: memos.map {Plan(memo: $0)},
+                                    selectedPlanType: .memo
+                    )
+                }
         }
     }
     
