@@ -201,11 +201,10 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
                 planCells = state.books.map { HomeSectionItem.bookCell(BookListCellReactor(state: $0)) }
             }
             
-//            var categoryCells = [HomeSectionItem.planTypesCell(state.selectedPlanType)]
-//            categoryCells.append(contentsOf: planCells)
-            
             let todoList = HomeSection(header: "Todo", items: todoCells)
-            let planList = HomeSection(header: "Plan", items: planCells)
+            let planList = HomeSection(header: "Plan", items:
+                [HomeSectionItem.planTypesCell(state.selectedPlanType)] + planCells
+            )
             
             sections.append(todoList)
             sections.append(planList)
@@ -221,9 +220,8 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     
     func memoListDeleteTapped(of cell: UICollectionViewCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-        let memo = self.reactor.currentState.memos[indexPath.item]
+        let memo = self.reactor.currentState.memos[indexPath.item - 1]
         self.reactor.action.onNext(.deleteMemo(memo.memoId))
-        
     }
     
 }

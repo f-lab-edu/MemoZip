@@ -44,7 +44,6 @@ public class HomeViewReactor: Reactor {
         public var todos: [Todo]
         public var memos: [Memo]
         public var books: [Book]
-//        public var sections: [HomeSection]
         public var selectedPlanType: PlanType = .memo
         public var move: IndexPath?
         public var memonContent: String?
