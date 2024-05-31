@@ -16,7 +16,6 @@ public class PlanRepositoryImp: PlanRepository {
         return .just([
             Plan(book: Book(title: "Clean Code", colorCode: "FFDAB9")),
             Plan(book: Book(title: "개미", colorCode: "E6E6FA"))
-            //Plan(memo: Memo(memo_id: 0, content: "메모입니다."))
         ])
     }
 

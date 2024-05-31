@@ -27,7 +27,7 @@ public class BookRepositoryImp: BookRepository {
             
             while rs.next() {
                 let title = rs.string(forColumn: "bookTitle")
-                let startDt = rs.string(forColumn: "startDate")
+                let startAt = rs.string(forColumn: "startDate")
                 let endDate = rs.string(forColumn: "endDate")
                 let startPage = rs.int(forColumn: "startPage")
                 let endPage = rs.int(forColumn: "endPage")
@@ -35,7 +35,7 @@ public class BookRepositoryImp: BookRepository {
                 let isDisplayDday = rs.int(forColumn: "isDisplayDday")
                 
                 bookList.append(Book(title: title!,
-                                     startDt: startDt, endDt: endDate,
+                                     startAt: startAt, endAt: endDate,
                                      startPage: Int(startPage), endPage: Int(endPage),
                                      colorCode: colorCode!,
                                      isDisplayDday: isDisplayDday == 0))
@@ -60,7 +60,7 @@ public class BookRepositoryImp: BookRepository {
          INSERT INTO book (bookTitle, startDate, endDate, startPage, endPage, colorCode, isDisplayDday)
          VALUES (?, ?, ?, ?, ?, ?, ?)
          """
-            try self.dbManger.fmdb.executeUpdate(sql, values: [book.title, book.startDt!, book.endDt!, book.startPage ?? 0, book.endPage ?? 0, book.colorCode, book.isDisplayDday ?? true]) 
+            try self.dbManger.fmdb.executeUpdate(sql, values: [book.title, book.startAt!, book.endAt!, book.startPage ?? 0, book.endPage ?? 0, book.colorCode, book.isDisplayDday ?? true]) 
             // FIXME: 우선은.. date 강제 옵셔널 처리
             return true
         } catch let error as NSError {

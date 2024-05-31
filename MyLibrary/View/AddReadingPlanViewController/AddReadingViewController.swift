@@ -217,10 +217,10 @@ extension AddReadingViewController: SendDelegate {
             book.title = title
         case .dateCell:
             if let startDate = data["startDate"] as? String {
-                book.startDt = startDate
+                book.startAt = startDate
             }
             if let endDate = data["endDate"] as? String {
-                book.endDt = endDate
+                book.endAt = endDate
             }
         case .pageCell:
             guard let startPage = data["startPage"] as? String,

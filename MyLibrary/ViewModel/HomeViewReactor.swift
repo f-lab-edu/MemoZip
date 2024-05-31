@@ -125,9 +125,9 @@ public class HomeViewReactor: Reactor {
             memoRepository.fetch()
                 .subscribe(onNext: { memos in
                 targetMemo = memos[indexPath.row]
-            })
+                }).dispose()
             
-            if let deleteId = targetMemo?.memo_id {
+            if let deleteId = targetMemo?.memoId {
                 if memoRepository.delete(with: deleteId) {
                     return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
                         .map { todos, memos in
