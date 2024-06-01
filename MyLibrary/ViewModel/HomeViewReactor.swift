@@ -7,9 +7,12 @@
 
 import Foundation
 import ReactorKit
-import Repository
 import RxSwift
+
+import Common
 import Model
+import Repository
+
 
 public class HomeViewReactor: Reactor {
     
@@ -25,8 +28,7 @@ public class HomeViewReactor: Reactor {
     public enum Action {
         case initiate
         case planTypeSelected(PlanType)
-        case cellSelected(IndexPath)
-        case moveToAddMemo(IndexPath)
+        case openBookView(bookViewOpenType: BookViewOpenType)
         case addMemo(String)
         case addBook(Book)
         case deleteMemo(IndexPath)
@@ -34,17 +36,16 @@ public class HomeViewReactor: Reactor {
     
     public enum Mutation {
         case update(todos: [Todo], plans: [Plan], selectedPlanType: PlanType? = nil)
-        case setSelectedIndexPath(IndexPath?)
-        case showAddViewController(IndexPath?)
+        case showBook(BookViewOpenType)
+        case updateBook(BookViewOpenType)
         case saveMemo(String)
     }
     
     public struct State {
-        public var selectedIndexPath: IndexPath?
         public var sections: [HomeSection]
         public var selectedPlanType: PlanType = .memo
-        public var move: IndexPath?
         public var memonContent: String?
+        public var bookView: BookViewOpenType?
     }
     
     private let todoRepository: TodoRepository
@@ -83,16 +84,15 @@ public class HomeViewReactor: Reactor {
                     }
                     return Mutation.update(todos: todos, plans: plans, selectedPlanType: planType)
                 }
-        case .cellSelected(let indexPath):
-            return Observable.concat([
-                Observable.just(Mutation.setSelectedIndexPath(indexPath)),
-                Observable.just(Mutation.setSelectedIndexPath(nil))
-            ])
-        case .moveToAddMemo(let indexPath):
-            return Observable.concat([
-                Observable.just(Mutation.showAddViewController(indexPath)),
-                Observable.just(Mutation.showAddViewController(nil))
-            ])
+        case .openBookView(let bookViewType):
+            switch bookViewType.type {
+            case .create, .delete: // FIXME: 나중에 수정
+                return Observable.just(Mutation.showBook(BookViewOpenType(type: .create)))
+            case .read:
+                return Observable.just(Mutation.updateBook(BookViewOpenType(type: .read, book: bookViewType.book!)))
+            case .update:
+                return Observable.just(Mutation.updateBook(BookViewOpenType(type: .update, book: bookViewType.book!)))
+            }
         case .addMemo(let memo):
             guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))}
             
@@ -127,7 +127,7 @@ public class HomeViewReactor: Reactor {
                 targetMemo = memos[indexPath.row]
                 }).dispose()
             
-            if let deleteId = targetMemo?.memoId {
+            if let deleteId = targetMemo?.memoID {
                 if memoRepository.delete(with: deleteId) {
                     return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
                         .map { todos, memos in
@@ -183,14 +183,23 @@ public class HomeViewReactor: Reactor {
             sections.append(planList)
             
             newState.sections = sections
-            
-        case .setSelectedIndexPath(let indexPath):
-            newState.selectedIndexPath = indexPath
-        case .showAddViewController(let indexPath):
-            newState.move = indexPath
+        case .updateBook(let bookView):
+            newState.bookView = bookView
+        case .showBook(let bookView):
+            newState.bookView = bookView
         case .saveMemo(let memo):
             newState.memonContent = memo
         }
         return newState
+    }
+}
+
+public struct BookViewOpenType {
+    public var type: OpenViewType
+    public var book: Book? = nil
+    
+    public init(type: OpenViewType, book: Book? = nil) {
+        self.type = type
+        self.book = book
     }
 }

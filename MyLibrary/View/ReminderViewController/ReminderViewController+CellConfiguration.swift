@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import Common
 
 extension ReminderViewController {
-    func defaultConfiguration(for cell: UICollectionViewListCell, at row: Row)
+    public func defaultConfiguration(for cell: UICollectionViewListCell, at row: Row)
     -> UIListContentConfiguration
     {
         var contentConfiguration = cell.defaultContentConfiguration()
@@ -18,7 +19,7 @@ extension ReminderViewController {
         return contentConfiguration
     }
 
-    func headerConfiguration(for cell: UICollectionViewListCell, with title: String)
+    public func headerConfiguration(for cell: UICollectionViewListCell, with title: String)
     -> UIListContentConfiguration
     {
         var contentConfiguration = cell.defaultContentConfiguration()
@@ -26,7 +27,7 @@ extension ReminderViewController {
         return contentConfiguration
     }
 
-    func titleConfiguration(for cell: UICollectionViewListCell, with title: String?)
+    public func titleConfiguration(for cell: UICollectionViewListCell, with title: String?)
     -> TextFieldContentView.Configuration
     {
         var contentConfiguration = cell.textFieldConfiguration()
@@ -37,7 +38,7 @@ extension ReminderViewController {
         return contentConfiguration
     }
 
-    func dateConfiguration(for cell: UICollectionViewListCell, with date: Date)
+    public func dateConfiguration(for cell: UICollectionViewListCell, with date: Date)
     -> DatePickerContentView.Configuration
     {
         var contentConfiguration = cell.datePickerConfiguration()
@@ -48,7 +49,7 @@ extension ReminderViewController {
         return contentConfiguration
     }
 
-    func notesConfiguration(for cell: UICollectionViewListCell, with notes: String?)
+    public func notesConfiguration(for cell: UICollectionViewListCell, with notes: String?)
     -> TextViewContentView.Configuration
     {
         var contentConfiguration = cell.textViewConfiguration()
@@ -59,7 +60,7 @@ extension ReminderViewController {
         return contentConfiguration
     }
 
-    func text(for row: Row) -> String? {
+    public func text(for row: Row) -> String? {
         switch row {
         case .date: return reminder.dueDate.dayText
         case .notes: return reminder.notes

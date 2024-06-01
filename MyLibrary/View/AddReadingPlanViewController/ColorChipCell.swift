@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import TinyConstraints
+import Common
 
 public class ColorChipCell: UICollectionViewCell {
     let colorView = UIView()

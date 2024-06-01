@@ -15,6 +15,7 @@ import RxDataSources
 import Model
 import ViewModel
 import Repository
+import Common
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
@@ -79,10 +80,11 @@ public class HomeViewController: UICollectionViewController {
             
             header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
             
+            // 헤더에서 추가버튼 클릭 Action
             header.addButton.rx.tap
                 .subscribe(onNext: { [weak self] in
                     guard let self = self else { return }
-                    self.reactor.action.onNext(.moveToAddMemo(indexPath))
+                    self.addItem()
                 })
                 .disposed(by: header.disposeBag)
             
@@ -133,63 +135,45 @@ public class HomeViewController: UICollectionViewController {
     
     public func bindReactor() {
         
-        // action
+        // bookListCell Selected Action
         collectionView.rx.itemSelected
-            .map{ Reactor.Action.cellSelected($0)}
-            .bind(to: reactor.action)
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                let item = self.dataSource[indexPath]
+                switch item {
+                    case let .bookCell(reactor):
+                        let item = reactor.currentState
+                        print("reactor.currentState: \(reactor.currentState)")
+                    case .memoCell(_):  break // TODO: 메모 셀 선택시
+                    default:            break
+                }
+            })
             .disposed(by: disposeBag)
         
         
         // state
-        reactor.state.map { $0.selectedIndexPath }
-            .compactMap { $0 }
-            .subscribe(onNext: { [weak self] indexPath in
-                guard let self = self else { return }
-                self.collectionView.deselectItem(at: indexPath, animated: true)
-            }).disposed(by: disposeBag)
-        
-        reactor.state.map { $0.move }
+        reactor.state.map { $0.bookView }
             .compactMap{ $0 }
-            .subscribe(onNext: { [weak self ] indexPath in
+            .subscribe(onNext: { [weak self ] bookView in
                 guard let self = self else { return }
                 
-                // ActionSheet 설정 (카테고리 선택 후 item 추가)
-                let actionsheetController = UIAlertController(title: "작성하실 형식을 선택해주세요.", message: "", preferredStyle: .actionSheet)
+                let viewController = self.routing.addReadingViewController() { [weak self] book in
+                    guard let self = self else { return }
+                    
+                    Observable.just(book)
+                        .map { HomeViewReactor.Action.addBook($0) }
+                        .bind(to: self.reactor.action)
+                        .disposed(by: self.disposeBag)
+                }
                 
-                let actionMemo = UIAlertAction(title: "메모", style: .default, handler: { _ in
-                    let viewController = self.routing.addMemoViewController { [weak self] memo in
-                        guard let self = self else { return }
-                       
-                        Observable.just(memo)
-                            .map { HomeViewReactor.Action.addMemo($0) }
-                            .bind(to: self.reactor.action)
-                            .disposed(by: self.disposeBag)
-                    }
-                    self.present(viewController, animated: true)
-                })
-                let actionBook = UIAlertAction(title: "독서계획", style: .default, handler: { _ in
-                    let viewController = self.routing.addReadingViewController() { [weak self] book in
-                        guard let self = self else { return }
-                        
-                        Observable.just(book)
-                            .map { HomeViewReactor.Action.addBook($0) }
-                            .bind(to: self.reactor.action)
-                            .disposed(by: self.disposeBag)
-                        
-                    }
-                    self.present(viewController, animated: true)
-                })
-
-                let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-
-                actionsheetController.addAction(actionMemo)
-                actionsheetController.addAction(actionBook)
-                actionsheetController.addAction(actionCancel)
+                if bookView.type == .read || bookView.type == .update {
+                    // TODO:  viewController에 모델(bookView.book)설정하기
+                }
                 
-                self.present(actionsheetController, animated: true)
-                
+                self.present(viewController, animated: true)
             }).disposed(by: disposeBag)
         
+        // TODO: memoView 구현
         
         // ui
         reactor.state.map { $0.sections }
@@ -198,6 +182,40 @@ public class HomeViewController: UICollectionViewController {
             .disposed(by: disposeBag)
         
         
+    }
+    
+    // ActionSheet 설정 (카테고리 선택 후 item 추가)
+    private func addItem() {
+        let actionsheetController = UIAlertController(title: "작성하실 형식을 선택해주세요.", message: "", preferredStyle: .actionSheet)
+        
+        let actionMemo = UIAlertAction(title: "메모", style: .default, handler: { _ in
+            let viewController = self.routing.addMemoViewController { [weak self] memo in
+                guard let self = self else { return }
+                Observable.just(memo)
+                    .map { HomeViewReactor.Action.addMemo($0) }
+                    .bind(to: self.reactor.action)
+                    .disposed(by: self.disposeBag)
+            }
+            self.present(viewController, animated: true)
+        })
+        let actionBook = UIAlertAction(title: "독서계획", style: .default, handler: { _ in
+            let viewController = self.routing.addReadingViewController() { [weak self] book in
+                guard let self = self else { return }
+                Observable.just(book)
+                    .map { HomeViewReactor.Action.addBook($0) }
+                    .bind(to: self.reactor.action)
+                    .disposed(by: self.disposeBag)
+            }
+            self.present(viewController, animated: true)
+        })
+
+        let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+
+        actionsheetController.addAction(actionMemo)
+        actionsheetController.addAction(actionBook)
+        actionsheetController.addAction(actionCancel)
+        
+        self.present(actionsheetController, animated: true)
     }
     
 }

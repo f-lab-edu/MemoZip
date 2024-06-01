@@ -13,11 +13,12 @@ let package = Package(
         .library(
             name: "LocalLibrary",
             targets: [
-              "Model",
-              "Repository", 
-              "RepositoryImp",
-              "ViewModel",
-              "View"
+                "Model",
+                "Repository",
+                "RepositoryImp",
+                "ViewModel",
+                "View",
+                "Common",
             ]
         ),
         .library(
@@ -95,6 +96,10 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
             ],
             path: "ViewModel"
+        ),
+        .target(
+            name: "Common",
+            path: "Common"
         ),
     ]
 )
