@@ -12,5 +12,5 @@ public protocol MemoRepository {
     func fetch() -> Observable<[Memo]>
     func create(content: String) -> Bool
     func update()
-    func delete(with memoId: Int32) -> Bool
+    func delete(with memoID: Int32) -> Bool
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    var dayAndTimeText: String {
+    package var dayAndTimeText: String {
         let timeText = formatted(date: .omitted, time: .shortened)
         if Locale.current.calendar.isDateInToday(self) {
             let timeFormat = NSLocalizedString("Today at %@", comment: "Today at time format string")
@@ -20,7 +20,7 @@ extension Date {
         }
     }
     
-    var dayText: String {
+    package var dayText: String {
         if Locale.current.calendar.isDateInToday(self) {
             return NSLocalizedString("Today", comment: "Today due date description")
         } else {

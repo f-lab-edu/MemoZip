@@ -15,6 +15,7 @@ import RxDataSources
 import Model
 import ViewModel
 import Repository
+import Common
 
 // Cell들로부터 입력받은 값을 받는 delegate
 public protocol SendDelegate { // FIXME: 이름... 수정하기

@@ -9,59 +9,59 @@ import Foundation
 import UIKit
 
 extension UIColor {
-    static var todayDetailCellTint: UIColor {
+    package static var todayDetailCellTint: UIColor {
         UIColor(named: "TodayDetailCellTint") ?? .tintColor
     }
 
-    static var todayListCellBackground: UIColor {
+    package static var todayListCellBackground: UIColor {
         UIColor(named: "TodayListCellBackground") ?? .secondarySystemBackground
     }
 
-    static var todayListCellDoneButtonTint: UIColor {
+    package static var todayListCellDoneButtonTint: UIColor {
         UIColor(named: "TodayListCellDoneButtonTint") ?? .tintColor
     }
 
-    static var todayGradientAllBegin: UIColor {
+    package static var todayGradientAllBegin: UIColor {
         UIColor(named: "TodayGradientAllBegin") ?? .systemFill
     }
 
-    static var todayGradientAllEnd: UIColor {
+    package static var todayGradientAllEnd: UIColor {
         UIColor(named: "TodayGradientAllEnd") ?? .quaternarySystemFill
     }
 
-    static var todayGradientFutureBegin: UIColor {
+    package static var todayGradientFutureBegin: UIColor {
         UIColor(named: "TodayGradientFutureBegin") ?? .systemFill
     }
 
-    static var todayGradientFutureEnd: UIColor {
+    package static var todayGradientFutureEnd: UIColor {
         UIColor(named: "TodayGradientFutureEnd") ?? .quaternarySystemFill
     }
 
-    static var todayGradientTodayBegin: UIColor {
+    package static var todayGradientTodayBegin: UIColor {
         UIColor(named: "TodayGradientTodayBegin") ?? .systemFill
     }
 
-    static var todayGradientTodayEnd: UIColor {
+    package static var todayGradientTodayEnd: UIColor {
         UIColor(named: "TodayGradientTodayEnd") ?? .quaternarySystemFill
     }
 
-    static var todayNavigationBackground: UIColor {
+    package static var todayNavigationBackground: UIColor {
         UIColor(named: "TodayNavigationBackground") ?? .secondarySystemBackground
     }
 
-    static var todayPrimaryTint: UIColor {
+    package static var todayPrimaryTint: UIColor {
         UIColor(named: "TodayPrimaryTint") ?? .tintColor
     }
 
-    static var todayProgressLowerBackground: UIColor {
+    package static var todayProgressLowerBackground: UIColor {
         UIColor(named: "TodayProgressLowerBackground") ?? .systemGray
     }
 
-    static var todayProgressUpperBackground: UIColor {
+    package static var todayProgressUpperBackground: UIColor {
         UIColor(named: "TodayProgressUpperBackground") ?? .systemGray6
     }
     
-    static func randomColor() -> UIColor {
+    package static func randomColor() -> UIColor {
         let red = CGFloat.random(in: 0...1)
         let green = CGFloat.random(in: 0...1)
         let blue = CGFloat.random(in: 0...1)
@@ -70,7 +70,7 @@ extension UIColor {
     }
     
     // 색상코드(HEX)로 UIColor 객체 생성
-    convenience init(hex: String, alpha: CGFloat = 1.0) {
+    public convenience init(hex: String, alpha: CGFloat = 1.0) {
         var formattedHex = hex
         if formattedHex.hasPrefix("#") {
             formattedHex.remove(at: formattedHex.startIndex)
