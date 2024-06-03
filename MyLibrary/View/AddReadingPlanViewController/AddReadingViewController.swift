@@ -45,6 +45,7 @@ public class AddReadingViewController: UICollectionViewController {
     private let reactor: Reactor
     private var disposeBag: DisposeBag = .init()
     public var book: Book
+    public var openViewType: OpenViewType? = .create
     public var dataHandler: ((Book)-> ())?
     
     typealias Reactor = ReadingViewReactor
@@ -55,10 +56,16 @@ public class AddReadingViewController: UICollectionViewController {
         case .titleCell:
             let cell = collectionView.dequeueReusableCell(BookTitleCell.self, for: indexPath)
             cell.delegate = self
+            if self.openViewType == .update {
+                cell.configure(title: self.book.title)
+            }
             return cell
         case .dateCell:
             let cell = collectionView.dequeueReusableCell(BookDateCell.self, for: indexPath)
             cell.delegate = self
+            if self.openViewType == .update {
+                cell.configure(book: self.book)
+            }
             return cell
         case .pageCell:
             let cell = collectionView.dequeueReusableCell(BookPageCell.self, for: indexPath)
@@ -75,10 +82,16 @@ public class AddReadingViewController: UICollectionViewController {
                     cell.updatePage(startPage: startPage, endPage: endPage)
                 })
             }
+            if self.openViewType == .update {
+                cell.configure(startPage: self.book.startPage ?? 0, endPage: self.book.endPage ?? 0)
+            }
             return cell
         case .colorCell:
             let cell = collectionView.dequeueReusableCell(BookColorCell.self, for: indexPath)
             cell.delegate = self
+            if self.openViewType == .update {
+                cell.configure(colorCode: self.book.colorCode)
+            }
             return cell
         case .progressTypeCell:
             let cell = collectionView.dequeueReusableCell(BookProgressTypeCell.self, for: indexPath)
@@ -87,9 +100,14 @@ public class AddReadingViewController: UICollectionViewController {
         }
     })
     
-    public init(reactor: ReadingViewReactor) {
+    public init(reactor: ReadingViewReactor, book: Book? = nil) {
         self.reactor = reactor
-        self.book = Book()
+        self.book = Book(bookId: 0) // default값 지정.
+        if openViewType == .update {
+            if let book = book {
+                self.book = book
+            }
+        }
         let layout = UICollectionViewFlowLayout()
         super.init(collectionViewLayout: layout)
     }

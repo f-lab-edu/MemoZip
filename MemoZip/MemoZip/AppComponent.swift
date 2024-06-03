@@ -4,6 +4,7 @@ import UIKit
 import ViewModel
 import View
 import Model
+import Common
 
 typealias AppRouting = HomeRouting
 
@@ -36,12 +37,16 @@ final class AppComponent: AppRouting {
         return addMemoVC
     }
     
-    func addReadingViewController(dataHandler: @escaping (Book) -> ()) -> UICollectionViewController {
+    func addReadingViewController(openViewType: OpenViewType, book: Book? = nil, dataHandler: @escaping (Book) -> ()) -> UICollectionViewController {
         let reactor = ReadingViewReactor(
             bookRepository: self.bookRepository
         )
         let addReadingVC = AddReadingViewController(reactor: reactor)
         addReadingVC.dataHandler = dataHandler
+        addReadingVC.openViewType = openViewType
+        if let book = book {
+            addReadingVC.book = book
+        }
         return addReadingVC
     }
 }

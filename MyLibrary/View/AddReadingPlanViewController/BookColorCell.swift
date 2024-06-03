@@ -12,12 +12,8 @@ import ViewModel
 
 import TinyConstraints
 
-final class BookColorCell: UICollectionViewListCell, View {
+final class BookColorCell: UICollectionViewListCell {
     
-    typealias Reactor = BookColorCellReactor
-    
-    // MARK: - Property
-    var disposeBag = DisposeBag()
     let colorCodes = BookColorType.allCases.map { $0.colorCode }
     var selectedIndexPath: IndexPath? // 선택된 셀의 인덱스를 저장하는 변수
     var delegate: SendDelegate?
@@ -71,8 +67,13 @@ final class BookColorCell: UICollectionViewListCell, View {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: BookColorCellReactor) {
-        
+    func configure(colorCode: String) {
+        let colorIndex = colorCodes.firstIndex(of: colorCode) ?? 0
+        let indexPath = IndexPath(item: colorIndex, section: 0)
+        selectedIndexPath = indexPath
+        let cell = palletView.dequeueReusableCell(ColorChipCell.self, for: indexPath)
+        cell.configure(colorCode: colorCodes[indexPath.item])
+        cell.checkView.isHidden = !(indexPath == selectedIndexPath)
     }
 }
 

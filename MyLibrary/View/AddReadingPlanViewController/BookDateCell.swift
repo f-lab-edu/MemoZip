@@ -9,6 +9,8 @@
 import UIKit
 import TinyConstraints
 
+import Model
+
 final class BookDateCell: UICollectionViewCell {
     // MARK: Properties
     private let datePicker = UIDatePicker()
@@ -121,27 +123,33 @@ final class BookDateCell: UICollectionViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         
-        let dateLabel = UILabel()
         let dateString = dateFormatter.string(from: sender.date)
-        dateLabel.text = dateString
-        dateLabel.textColor = .white
-        dateLabel.font = UIFont.systemFont(ofSize: 16)
-        
-        activeView.subviews.forEach { $0.removeFromSuperview() }
-        activeView.addSubview(dateLabel)
-        dateLabel.centerXToSuperview()
-        dateLabel.centerYToSuperview()
+        arrangeView(targetView: activeView, text: dateString)
         
         datePicker.isHidden = true
    
         delegate?.getValue(type: .dateCell, data: activeView == startDateView ? ["startDate" : dateString] : ["endDate" : dateString])
     }
     
+    private func arrangeView(targetView: UIView, text: String) {
+        let dateLabel = UILabel()
+        let dateString = text
+        dateLabel.text = dateString
+        dateLabel.textColor = .white
+        dateLabel.font = UIFont.systemFont(ofSize: 16)
+        
+        targetView.subviews.forEach { $0.removeFromSuperview() }
+        targetView.addSubview(dateLabel)
+        dateLabel.centerXToSuperview()
+        dateLabel.centerYToSuperview()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func configure() {
-        
+    public func configure(book: Book) {
+        arrangeView(targetView: startDateView, text: book.startAt ?? "")
+        arrangeView(targetView: endDateView, text: book.endAt ?? "")
     }
 }

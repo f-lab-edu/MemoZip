@@ -49,6 +49,7 @@ final class BookPageCell: UICollectionViewCell {
         return titleLabel
     }()
     
+    // 데이터가 들어가는 Label
     let pageLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.textColor = .white
@@ -96,11 +97,16 @@ final class BookPageCell: UICollectionViewCell {
         pageLabel.trailing(to: pageTextLabel, offset: -20)
     
     }
+
+    func configure(startPage: Int, endPage: Int) {
+        pageLabel.text = "\(startPage) / \(endPage)"
+    }
     
     private func setupGestureRecognizers() {
         let readingViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(readingViewTapped))
         readingView.addGestureRecognizer(readingViewTapGesture)
     }
+
     
     @objc private func readingViewTapped() {
         showAlertAction?()

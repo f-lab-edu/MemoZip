@@ -31,6 +31,7 @@ public class HomeViewReactor: Reactor {
         case openBookView(bookViewOpenType: BookViewOpenType)
         case addMemo(String)
         case addBook(Book)
+        case updateBook(Book)
         case deleteMemo(IndexPath)
     }
     
@@ -103,6 +104,22 @@ public class HomeViewReactor: Reactor {
                         Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
                     }
             )
+        case .updateBook(let book):
+            guard self.bookRepository.update(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                    .map { todos, books in
+                        Mutation.update(todos: todos,
+                                        plans: books.map {Plan(book: $0)},
+                                        selectedPlanType: .book
+                        )
+                    }
+            }
+            return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
+                .map { todos, books in
+                    Mutation.update(todos: todos,
+                                    plans: books.map {Plan(book: $0)},
+                                    selectedPlanType: .book
+                    )
+                }
         case .addBook(let book):
             guard self.bookRepository.create(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
                     .map { todos, books in

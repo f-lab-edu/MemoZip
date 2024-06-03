@@ -26,6 +26,7 @@ public class BookRepositoryImp: BookRepository {
             let rs = try self.dbManger.fmdb.executeQuery(sql, values: nil)
             
             while rs.next() {
+                let bookId = rs.int(forColumn: "bookId")
                 let title = rs.string(forColumn: "bookTitle")
                 let startAt = rs.string(forColumn: "startDate")
                 let endDate = rs.string(forColumn: "endDate")
@@ -34,7 +35,8 @@ public class BookRepositoryImp: BookRepository {
                 let colorCode = rs.string(forColumn: "colorCode")
                 let isDisplayDday = rs.int(forColumn: "isDisplayDday")
                 
-                bookList.append(Book(title: title!,
+                bookList.append(Book(bookId: bookId,
+                                     title: title!,
                                      startAt: startAt, endAt: endDate,
                                      startPage: Int(startPage), endPage: Int(endPage),
                                      colorCode: colorCode!,
@@ -44,12 +46,6 @@ public class BookRepositoryImp: BookRepository {
             print("failed: \(error.localizedDescription)")
         }
         return .just(bookList)
-        /*
-         return .just([
-         Book(title: "Clean Code", colorCode: "FFD4A5"),
-         Book(title: "개미", colorCode: "D9D9F3")
-         ])
-         */
     }
     
     
@@ -69,10 +65,38 @@ public class BookRepositoryImp: BookRepository {
         }
     }
     
-    public func update() {}
+    public func update(book: Book) -> Bool {
+        do {
+            let sql = """
+                UPDATE book
+                SET bookTitle = ?, startDate = ?, endDate = ?, startPage = ?, endPage = ?, colorCode = ?, isDisplayDday = ?
+                WHERE bookId = ?
+                """
+            try self.dbManger.fmdb.executeUpdate(sql, values: [
+                book.title,
+                book.startAt ?? "",
+                book.endAt ?? "",
+                book.startPage ?? 0,
+                book.endPage ?? 0,
+                book.colorCode,
+                book.isDisplayDday ?? true ? 1 : 0,
+                book.bookId
+            ])
+            return true
+        } catch let error as NSError {
+            print("Update Error: \(error.localizedDescription)")
+            return false
+        }
+    }
     
-    public func delete() -> Bool {
-        
-        return true
+    public func delete(bookId: Int32) -> Bool {
+        do {
+            let sql = "DELETE FROM book WHERE bookId = ?"
+            try self.dbManger.fmdb.executeUpdate(sql, values: [bookId])
+            return true
+        } catch let error as NSError {
+            print("Delete Error: \(error.localizedDescription)")
+            return false
+        }
     }
 }
