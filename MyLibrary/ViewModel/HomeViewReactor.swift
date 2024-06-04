@@ -32,7 +32,7 @@ public class HomeViewReactor: Reactor {
         case addMemo(String)
         case addBook(Book)
         case updateBook(Book)
-        case deleteMemo(IndexPath)
+        case deleteMemo(Memo)
     }
     
     public enum Mutation {
@@ -96,16 +96,8 @@ public class HomeViewReactor: Reactor {
         case .addBook(let book):
             _ = self.bookRepository.create(book: book)
             return self.fetchAll(with: .book)
-        case .deleteMemo(let indexPath):
-            var targetMemo: Memo?
-            memoRepository.fetch()
-                .subscribe(onNext: { memos in
-                    targetMemo = memos[indexPath.row]
-                }).dispose()
-            
-            if let deleteId = targetMemo?.memoID {
-                _ = memoRepository.delete(with: deleteId)
-            }
+        case let .deleteMemo(memo):
+            _ = memoRepository.delete(with: memo.memoID)
             return self.fetchAll(with: .memo)
         }
     }
@@ -141,7 +133,7 @@ public class HomeViewReactor: Reactor {
                 switch plan {
                 case .memo(let memo):
                     // Memo 객체의 정보를 사용
-                    return HomeSectionItem.memoCell(MemoListCellReactor(state: memo))
+                    return HomeSectionItem.memoCell(memo)
                 case .book(let book):
                     // Book 객체의 정보를 사용
                     return HomeSectionItem.bookCell(BookListCellReactor(state: book))

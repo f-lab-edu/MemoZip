@@ -6,72 +6,66 @@
 //
 
 import UIKit
-import ReactorKit
-import ViewModel
 
-class MemoListCell: UICollectionViewCell, View {
+protocol MemoListCellDelegate: AnyObject {
+    func memoListCellDeleteTapped(of cell: MemoListCell)
+}
 
-    typealias Reactor = MemoListCellReactor
+class MemoListCell: UICollectionViewCell {
+
+    private weak var contentLabel: UILabel!
+    private weak var baseView: UIView!
     
-    // MARK: - Properties
-    var disposeBag = DisposeBag()
-    
-    // MARK: - UI
-    let contentLabel = UILabel()
-    let baseView = UIView()
-    let deleteButton: UIButton = {
-        let button = UIButton()
-        let deleteImage = UIImage(systemName: "x.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        button.setImage(deleteImage, for: .normal)
-        //button.addTarget(self, action: #selector(tappedDeleteButton), for: .touchUpInside)
-        return button
-    }()
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.disposeBag = DisposeBag()
-    }
+    weak var delegate: MemoListCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        [baseView, contentLabel, deleteButton].forEach {
-            self.contentView.addSubview($0)
-        }
-        
         self.backgroundColor = .systemGray5
-    
-        baseView.leadingToSuperview(offset: 4)
-        baseView.trailingToSuperview(offset: 4)
-        baseView.topToSuperview(offset: 4)
-        baseView.bottomToSuperview(offset: -4)
-        
-        baseView.backgroundColor = .systemGray
-        
-        contentLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        contentLabel.textColor = .black
-        contentLabel.numberOfLines = 0
-        
-        contentLabel.leading(to: baseView, offset: 8)
-        contentLabel.trailing(to: baseView, offset: 8)
-        contentLabel.top(to: baseView, offset: 8)
-        contentLabel.bottom(to: baseView, offset: -8)
-        
-        deleteButton.trailingToSuperview(offset: 16)
-        deleteButton.centerYToSuperview()
-        
-        bringSubviewToFront(contentLabel)
+        self.setupSubviews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: MemoListCellReactor) {
-        // 부분 cornerRadius 적용
+    private func setupSubviews() {
+        let baseView = UIView()
+        baseView.backgroundColor = .systemGray
+        self.contentView.addSubview(baseView)
+        baseView.leadingToSuperview(offset: 4)
+        baseView.trailingToSuperview(offset: 4)
+        baseView.topToSuperview(offset: 4)
+        baseView.bottomToSuperview(offset: -4)
+        self.baseView = baseView
+        
+        let contentLabel = UILabel()
+        contentLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        contentLabel.textColor = .black
+        contentLabel.numberOfLines = 0
+        self.contentView.addSubview(contentLabel)
+        contentLabel.leading(to: baseView, offset: 8)
+        contentLabel.trailing(to: baseView, offset: 8)
+        contentLabel.top(to: baseView, offset: 8)
+        contentLabel.bottom(to: baseView, offset: -8)
+        self.contentLabel = contentLabel
+        
+        let deleteButton = UIButton()
+        let deleteImage = UIImage(systemName: "x.circle.fill")?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        deleteButton.setImage(deleteImage, for: .normal)
+        deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
+        self.contentView.addSubview(deleteButton)
+        deleteButton.trailingToSuperview(offset: 16)
+        deleteButton.centerYToSuperview()
+    }
+    
+    func configure(with memoContent: String) {
         self.layer.cornerRadius = 4
         self.baseView.layer.cornerRadius = 4
-        self.contentLabel.text = reactor.currentState.content
+        self.contentLabel.text = memoContent
+    }
+    
+    @objc private func deleteTapped() {
+        self.delegate?.memoListCellDeleteTapped(of: self)
     }
 }
     
