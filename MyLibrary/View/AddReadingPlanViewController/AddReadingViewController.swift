@@ -95,6 +95,9 @@ public class AddReadingViewController: UICollectionViewController {
             return cell
         case .progressTypeCell:
             let cell = collectionView.dequeueReusableCell(BookProgressTypeCell.self, for: indexPath)
+            if self.openViewType == .update {
+                cell.configure(with: self.book)
+            }
             cell.delegate = self
             return cell
         }

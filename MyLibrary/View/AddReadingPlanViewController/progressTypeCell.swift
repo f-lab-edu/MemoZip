@@ -59,6 +59,10 @@ class BookProgressTypeCell: UICollectionViewCell {
         pickView.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
     }
     
+    func configure(with book: Book) {
+        pickView.selectedSegmentIndex = book.isDisplayDday ? 0 : 1
+    }
+    
     @objc private func segmentedControlValueChanged() {
         delegate?.getValue(type: .progressTypeCell, data: ["progressType" : pickView.selectedSegmentIndex])
     }

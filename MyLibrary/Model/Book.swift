@@ -15,7 +15,7 @@ public struct Book {
     public var startPage: Int? = 0
     public var endPage: Int? = 0
     public var colorCode: String
-    public var isDisplayDday: Bool?
+    public var isDisplayDday: Bool
     
     public init(
         bookId: Int32,
@@ -24,7 +24,7 @@ public struct Book {
         endAt: String? = Date().formattedDate(from: Date(), to: "yyyy.MM.dd"),
         startPage: Int? = 0, endPage: Int? = 0,
         colorCode: String = "000000",
-        isDisplayDday: Bool? = true
+        isDisplayDday: Bool = true
     ) {
         self.bookId = bookId
         self.title = title

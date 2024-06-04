@@ -7,6 +7,7 @@
 import UIKit
 import ReactorKit
 import ViewModel
+import Common
 
 class BookListCell: UICollectionViewCell, View {
     
@@ -19,7 +20,7 @@ class BookListCell: UICollectionViewCell, View {
     let titleLabel = UILabel()
     // ...
     
-    let d_dayLabel = UILabel()
+    let progressLabel = UILabel()
     
     let progressView = UIView()
     let progressBaseView = UIView()
@@ -30,7 +31,7 @@ class BookListCell: UICollectionViewCell, View {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        [titleLabel, d_dayLabel, progressView, progressBaseView].forEach {
+        [titleLabel, progressLabel, progressView, progressBaseView].forEach {
             self.addSubview($0)
         }
     
@@ -44,12 +45,12 @@ class BookListCell: UICollectionViewCell, View {
         titleLabel.centerXToSuperview()
         
         
-        d_dayLabel.textAlignment = .center
-        d_dayLabel.text = "D-25"
-        d_dayLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        progressLabel.textAlignment = .center
+        progressLabel.text = "D-25"
+        progressLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         
-        d_dayLabel.centerXToSuperview()
-        d_dayLabel.centerYToSuperview()
+        progressLabel.centerXToSuperview()
+        progressLabel.centerYToSuperview()
 
         progressBaseView.bottomToSuperview(offset: -32)
         progressBaseView.leadingToSuperview(offset: 8)
@@ -61,7 +62,6 @@ class BookListCell: UICollectionViewCell, View {
         
         progressView.bottomToSuperview(offset: -32)
         progressView.leadingToSuperview(offset: 8)
-        progressView.trailingToSuperview(offset: 100)
         progressView.height(8)
         progressView.layer.cornerRadius = 4
         progressView.backgroundColor = .white
@@ -74,11 +74,46 @@ class BookListCell: UICollectionViewCell, View {
     }
     
     func bind(reactor: BookListCellReactor) {
+        self.backgroundColor = UIColor(hex: reactor.currentState.colorCode, alpha: 1.0)
+        
         // 부분 cornerRadius 적용
         self.roundCorners(cornerRadius: 12, maskedCorners: [.layerMaxXMaxYCorner, .layerMaxXMinYCorner])
         self.titleLabel.text = reactor.currentState.title
-        self.d_dayLabel.text = "" // TODO: dday로직 추가
-        self.backgroundColor = UIColor(hex: reactor.currentState.colorCode, alpha: 1.0)
+        self.titleLabel.textColor = reactor.currentState.colorCode == BookColorType.yellow.colorCode ? .black : .white
+        self.progressLabel.textColor = reactor.currentState.colorCode == BookColorType.yellow.colorCode ? .black : .white
+        self.progressBaseView.backgroundColor = reactor.currentState.colorCode == BookColorType.yellow.colorCode ? .black : .white
+        self.progressView.backgroundColor = reactor.currentState.colorCode == BookColorType.yellow.colorCode ? .black : .white
+        
+        // 달성률 표기 방식
+        if reactor.currentState.isDisplayDday {
+            // d-day 형식으로 표기
+            if let startAt = reactor.currentState.startAt,
+               let endAt = reactor.currentState.endAt {
+                if let dDay = endAt.calculateDDay(format: "yyyy.MM.dd") {
+                    self.progressLabel.text = dDay == -1 ? "독서완료" : "D-\(dDay)"
+                    
+                    if dDay != -1 {
+                        if let totalDay = startAt.daysBetween(endAt, dateFormat: "yyyy.MM.dd") {
+                            let ratio = CGFloat(totalDay - dDay) / CGFloat(totalDay)
+                            progressView.widthAnchor.constraint(equalTo: progressBaseView.widthAnchor, multiplier: CGFloat(ratio)).isActive = true
+                        }
+                    } else {
+                        progressView.widthAnchor.constraint(equalTo: progressBaseView.widthAnchor, multiplier: 1.0).isActive = true
+                    }
+                }
+            }
+        } else {
+            // 페이지 표기 방식
+            if let startPage = reactor.currentState.startPage,
+               let endPage = reactor.currentState.endPage {
+                progressLabel.text = startPage == endPage ? "독서완료" : "\(startPage)p 읽는 중"
+                
+                if endPage != 0 {
+                    let ratio = CGFloat(startPage) / CGFloat(endPage)
+                    progressView.widthAnchor.constraint(equalTo: progressBaseView.widthAnchor, multiplier: CGFloat(ratio)).isActive = true
+                }
+            }
+        }
     }
 }
     
