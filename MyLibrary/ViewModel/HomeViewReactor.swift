@@ -36,13 +36,16 @@ public class HomeViewReactor: Reactor {
     }
     
     public enum Mutation {
-        case update(todos: [Todo], plans: [Plan], selectedPlanType: PlanType? = nil)
+        case update(todos: [Todo], memos: [Memo], books: [Book], selectedPlanType: PlanType? = nil)
         case showBook(BookViewOpenType)
         case updateBook(BookViewOpenType)
         case saveMemo(String)
     }
     
     public struct State {
+        public var todos: [Todo] = []
+        public var memos: [Memo] = []
+        public var books: [Book] = []
         public var sections: [HomeSection]
         public var selectedPlanType: PlanType = .memo
         public var memonContent: String?
@@ -68,23 +71,10 @@ public class HomeViewReactor: Reactor {
     // MARK: - func
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .initiate: // 초기화 시에는 memo만 load
-            return Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
-                .map { todos, memos, books in
-                    Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
-                }
+        case .initiate:
+            return self.fetchAll()
         case .planTypeSelected(let planType):
-            return Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
-                .map { todos, memos, books in
-                    let plans: [Plan]
-                    switch planType {
-                    case .memo:
-                        plans = memos.map { Plan(memo: $0) }
-                    case .book:
-                        plans = books.map { Plan(book: $0) }
-                    }
-                    return Mutation.update(todos: todos, plans: plans, selectedPlanType: planType)
-                }
+            return self.fetchAll(with: planType)
         case .openBookView(let bookViewType):
             switch bookViewType.type {
             case .create, .delete: // FIXME: 나중에 수정
@@ -96,81 +86,51 @@ public class HomeViewReactor: Reactor {
             }
         case .addMemo(let memo):
             guard self.memoRepository.create(content: memo) else { return Observable.just(Mutation.saveMemo(""))}
-            
             return Observable.concat(
                 Observable.just(Mutation.saveMemo(memo)),
-                Observable.zip(todoRepository.fetch(), memoRepository.fetch())
-                    .map { todos, memos in
-                        Mutation.update(todos: todos, plans: memos.map { Plan(memo: $0) })
-                    }
+                self.fetchAll(with: .memo)
             )
         case .updateBook(let book):
-            guard self.bookRepository.update(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
-                    .map { todos, books in
-                        Mutation.update(todos: todos,
-                                        plans: books.map {Plan(book: $0)},
-                                        selectedPlanType: .book
-                        )
-                    }
-            }
-            return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
-                .map { todos, books in
-                    Mutation.update(todos: todos,
-                                    plans: books.map {Plan(book: $0)},
-                                    selectedPlanType: .book
-                    )
-                }
+            _ = self.bookRepository.update(book: book)
+            return self.fetchAll(with: .book)
         case .addBook(let book):
-            guard self.bookRepository.create(book: book) else { return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
-                    .map { todos, books in
-                        Mutation.update(todos: todos,
-                                        plans: books.map {Plan(book: $0)},
-                                        selectedPlanType: .book
-                        )
-                    }
-            }
-            return Observable.zip(todoRepository.fetch(), bookRepository.fetch())
-                .map { todos, books in
-                    Mutation.update(todos: todos,
-                                    plans: books.map {Plan(book: $0)},
-                                    selectedPlanType: .book
-                    )
-                }
+            _ = self.bookRepository.create(book: book)
+            return self.fetchAll(with: .book)
         case .deleteMemo(let indexPath):
             var targetMemo: Memo?
-            
             memoRepository.fetch()
                 .subscribe(onNext: { memos in
-                targetMemo = memos[indexPath.row]
+                    targetMemo = memos[indexPath.row]
                 }).dispose()
             
             if let deleteId = targetMemo?.memoID {
-                if memoRepository.delete(with: deleteId) {
-                    return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
-                        .map { todos, memos in
-                            Mutation.update(todos: todos,
-                                            plans: memos.map {Plan(memo: $0)},
-                                            selectedPlanType: .memo
-                            )
-                        }
-                }
+                _ = memoRepository.delete(with: deleteId)
             }
-            return Observable.zip(todoRepository.fetch(), memoRepository.fetch())
-                .map { todos, memos in
-                    Mutation.update(todos: todos,
-                                    plans: memos.map {Plan(memo: $0)},
-                                    selectedPlanType: .memo
-                    )
-                }
+            return self.fetchAll(with: .memo)
         }
+    }
+    
+    private func fetchAll(with type: PlanType? = nil) -> Observable<Mutation> {
+        return Observable.zip(todoRepository.fetch(), memoRepository.fetch(), bookRepository.fetch())
+            .map { todos, memos, books in
+                Mutation.update(todos: todos, memos: memos, books: books, selectedPlanType: type)
+            }
     }
     
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .update(todos, plans, planType):
+        case let .update(todos, memos, books, planType):
+            newState.todos = todos
+            newState.memos = memos
+            newState.books = books
             if let planType = planType {
                 newState.selectedPlanType = planType
+            }
+            let plans: [Plan]
+            switch newState.selectedPlanType {
+            case .memo: plans = newState.memos.map { Plan(memo: $0) }
+            case .book: plans = newState.books.map { Plan(book: $0) }
             }
             var sections = [HomeSection]()
             

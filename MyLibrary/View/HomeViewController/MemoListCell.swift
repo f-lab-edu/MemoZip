@@ -28,6 +28,8 @@ class MemoListCell: UICollectionViewCell, View {
     }()
     
     override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
     
     override init(frame: CGRect) {

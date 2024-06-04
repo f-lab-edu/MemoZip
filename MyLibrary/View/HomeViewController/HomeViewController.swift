@@ -66,7 +66,7 @@ public class HomeViewController: UICollectionViewController {
                     guard let self = self else { return }
                     self.reactor.action.onNext(.deleteMemo(indexPath))
                 })
-                .disposed(by: self.disposeBag)
+                .disposed(by: cell.disposeBag)
             return cell
         }
     }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
@@ -141,8 +141,8 @@ public class HomeViewController: UICollectionViewController {
                 guard let self = self else { return }
                 let item = self.dataSource[indexPath]
                 switch item {
-                    case let .bookCell(reactor):
-                        let item = reactor.currentState
+                case let .bookCell(reactor):
+                    let item = reactor.currentState
                     
                     let viewController = self.routing.addReadingViewController(openViewType: .update, book: item) { [weak self] book in
                         guard let self = self else { return }
@@ -154,11 +154,8 @@ public class HomeViewController: UICollectionViewController {
                     }
                     
                     self.present(viewController, animated: true)
-                    
-                    
-                    
-                    case .memoCell(_):  break // TODO: 메모 셀 선택시
-                    default:            break
+                case .memoCell(_):  break // TODO: 메모 셀 선택시
+                default:            break
                 }
             })
             .disposed(by: disposeBag)
@@ -217,16 +214,15 @@ public class HomeViewController: UICollectionViewController {
             }
             self.present(viewController, animated: true)
         })
-
+        
         let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-
+        
         actionsheetController.addAction(actionMemo)
         actionsheetController.addAction(actionBook)
         actionsheetController.addAction(actionCancel)
         
         self.present(actionsheetController, animated: true)
     }
-    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
