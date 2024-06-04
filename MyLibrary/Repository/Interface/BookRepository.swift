@@ -11,6 +11,6 @@ import RxSwift
 public protocol BookRepository {
     func fetch() -> Observable<[Book]>
     func create(book: Book) -> Bool
-    func update()
-    func delete() -> Bool
+    func update(book: Book) -> Bool
+    func delete(bookId: Int32) -> Bool
 }

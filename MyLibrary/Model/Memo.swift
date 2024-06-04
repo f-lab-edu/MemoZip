@@ -9,7 +9,7 @@ import Foundation
 
 public struct Memo {
     
-    public var memoID: Int32
+    public let memoID: Int32
     public var content: String
     
     public init(memoID: Int32, content: String) {

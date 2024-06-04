@@ -19,7 +19,7 @@ import Common
 
 public protocol HomeRouting {
     func addMemoViewController(messageHandler: @escaping (String) -> ()) -> UIViewController
-    func addReadingViewController(dataHandler: @escaping (Book) -> ()) -> UICollectionViewController
+    func addReadingViewController(openViewType: OpenViewType, book: Book?, dataHandler: @escaping (Book) -> ()) -> UICollectionViewController
 }
 
 public class HomeViewController: UICollectionViewController {
@@ -143,7 +143,20 @@ public class HomeViewController: UICollectionViewController {
                 switch item {
                     case let .bookCell(reactor):
                         let item = reactor.currentState
-                        print("reactor.currentState: \(reactor.currentState)")
+                    
+                    let viewController = self.routing.addReadingViewController(openViewType: .update, book: item) { [weak self] book in
+                        guard let self = self else { return }
+                        
+                        Observable.just(book)
+                            .map { HomeViewReactor.Action.updateBook($0) }
+                            .bind(to: self.reactor.action)
+                            .disposed(by: self.disposeBag)
+                    }
+                    
+                    self.present(viewController, animated: true)
+                    
+                    
+                    
                     case .memoCell(_):  break // TODO: 메모 셀 선택시
                     default:            break
                 }
@@ -157,17 +170,13 @@ public class HomeViewController: UICollectionViewController {
             .subscribe(onNext: { [weak self ] bookView in
                 guard let self = self else { return }
                 
-                let viewController = self.routing.addReadingViewController() { [weak self] book in
+                let viewController = self.routing.addReadingViewController(openViewType: .create, book: nil) { [weak self] book in
                     guard let self = self else { return }
                     
                     Observable.just(book)
                         .map { HomeViewReactor.Action.addBook($0) }
                         .bind(to: self.reactor.action)
                         .disposed(by: self.disposeBag)
-                }
-                
-                if bookView.type == .read || bookView.type == .update {
-                    // TODO:  viewController에 모델(bookView.book)설정하기
                 }
                 
                 self.present(viewController, animated: true)
@@ -199,7 +208,7 @@ public class HomeViewController: UICollectionViewController {
             self.present(viewController, animated: true)
         })
         let actionBook = UIAlertAction(title: "독서계획", style: .default, handler: { _ in
-            let viewController = self.routing.addReadingViewController() { [weak self] book in
+            let viewController = self.routing.addReadingViewController(openViewType: .create, book: nil) { [weak self] book in
                 guard let self = self else { return }
                 Observable.just(book)
                     .map { HomeViewReactor.Action.addBook($0) }

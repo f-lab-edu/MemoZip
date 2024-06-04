@@ -62,7 +62,8 @@ final class BookTitleCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: BookTitleCellReactor) {
+    func configure(title: String) {
+        bookTextField.text = title
     }
 }
 
