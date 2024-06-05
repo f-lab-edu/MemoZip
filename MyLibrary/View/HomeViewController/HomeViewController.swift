@@ -22,11 +22,12 @@ public protocol HomeRouting {
     func addReadingViewController(openViewType: OpenViewType, book: Book?, dataHandler: @escaping (Book) -> ()) -> UICollectionViewController
 }
 
-public class HomeViewController: UICollectionViewController {
+public class HomeViewController: UICollectionViewController, MemoListCellDelegate {
     
     typealias Reactor = HomeViewReactor
     
     private let reactor: Reactor
+    private var state: Reactor.State { self.reactor.currentState }
     private var disposeBag: DisposeBag = .init()
     private let routing: HomeRouting
     
@@ -58,15 +59,10 @@ public class HomeViewController: UICollectionViewController {
             let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
-        case .memoCell(let reactor):
+        case let .memoCell(memo):
             let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
-            cell.reactor = reactor
-            cell.deleteButton.rx.tap
-                .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
-                    self.reactor.action.onNext(.deleteMemo(indexPath))
-                })
-                .disposed(by: self.disposeBag)
+            cell.configure(with: memo.content)
+            cell.delegate = self
             return cell
         }
     }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
@@ -141,8 +137,8 @@ public class HomeViewController: UICollectionViewController {
                 guard let self = self else { return }
                 let item = self.dataSource[indexPath]
                 switch item {
-                    case let .bookCell(reactor):
-                        let item = reactor.currentState
+                case let .bookCell(reactor):
+                    let item = reactor.currentState
                     
                     let viewController = self.routing.addReadingViewController(openViewType: .update, book: item) { [weak self] book in
                         guard let self = self else { return }
@@ -154,11 +150,8 @@ public class HomeViewController: UICollectionViewController {
                     }
                     
                     self.present(viewController, animated: true)
-                    
-                    
-                    
-                    case .memoCell(_):  break // TODO: 메모 셀 선택시
-                    default:            break
+                case .memoCell(_):  break // TODO: 메모 셀 선택시
+                default:            break
                 }
             })
             .disposed(by: disposeBag)
@@ -189,8 +182,6 @@ public class HomeViewController: UICollectionViewController {
             .asObservable()
             .bind(to: self.collectionView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-        
-        
     }
     
     // ActionSheet 설정 (카테고리 선택 후 item 추가)
@@ -217,9 +208,9 @@ public class HomeViewController: UICollectionViewController {
             }
             self.present(viewController, animated: true)
         })
-
+        
         let actionCancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-
+        
         actionsheetController.addAction(actionMemo)
         actionsheetController.addAction(actionBook)
         actionsheetController.addAction(actionCancel)
@@ -227,6 +218,12 @@ public class HomeViewController: UICollectionViewController {
         self.present(actionsheetController, animated: true)
     }
     
+    // MARK: - MemoListCellDelegate
+    func memoListCellDeleteTapped(of cell: MemoListCell) {
+        guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
+        let memo = self.state.memos[indexPath.item - 1]
+        self.reactor.action.onNext(.deleteMemo(memo))
+    }
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
