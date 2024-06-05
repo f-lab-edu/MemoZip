@@ -25,7 +25,7 @@ public enum HomeSectionItem {
     case categoryCell([String])
     case planTypesCell(PlanType)
     case bookCell(BookListCellReactor)
-    case memoCell(MemoListCellReactor)
+    case memoCell(Memo)
     // ...
 }
 
