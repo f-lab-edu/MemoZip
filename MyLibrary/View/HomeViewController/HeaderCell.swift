@@ -6,50 +6,49 @@
 //
 
 import UIKit
-import ReactorKit
-import RxSwift
-import RxCocoa
-import ViewModel
 
-class HeaderCell: UICollectionReusableView, View {
+class HeaderCell: UICollectionViewCell {
     
-    typealias Reactor = HeaderCellReactor
-    
-    // MARK: - Property
-    var disposeBag = DisposeBag()
-    
-    // MARK: - view
-    let titleLabel = UILabel()
-    
-    var addButton = UIButton()
-    // ...
+    private weak var titleLabel: UILabel!
+    private weak var addButton: UIButton!
+    private var addTapped: (() -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.addSubview(titleLabel)
-        self.addSubview(addButton)
-        
-        titleLabel.numberOfLines = 0
-        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        titleLabel.left(to: self, offset: 8)
-        titleLabel.centerYToSuperview()
-        
-        addButton.setImage(UIImage(systemName: "plus.app"), for: .normal)
-        addButton.height(20)
-        addButton.width(20)
-        addButton.centerYToSuperview()
-        addButton.right(to: self, offset: -8)
-        
+        self.setupSubviews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func bind(reactor: HeaderCellReactor) {
+    private func setupSubviews() {
+        let titleLabel = UILabel()
+        titleLabel.numberOfLines = 0
+        titleLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        self.addSubview(titleLabel)
+        titleLabel.leadingToSuperview(offset: 16)
+        titleLabel.centerYToSuperview()
+        self.titleLabel = titleLabel
         
-        titleLabel.text = reactor.initialState.headerTitle
-        
+        let addButton = UIButton()
+        addButton.setImage(UIImage(systemName: "plus.app"), for: .normal)
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        self.addSubview(addButton)
+        addButton.width(20)
+        addButton.height(20)
+        addButton.trailingToSuperview(offset: 16)
+        addButton.centerYToSuperview()
+        self.addButton = addButton
+    }
+    
+    func configure(with title: String, addTapped: (() -> Void)?) {
+        self.titleLabel.text = title
+        self.addTapped = addTapped
+        self.addButton.isHidden = addTapped == nil
+    }
+    
+    @objc private func addButtonTapped() {
+        self.addTapped?()
     }
 }

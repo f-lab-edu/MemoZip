@@ -32,64 +32,36 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     private let routing: HomeRouting
     
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
-    lazy var dataSource = DataSource(configureCell: { dataSource, collectionView, indexPath, item in
-        
+    lazy var dataSource = DataSource { dataSource, collectionView, indexPath, item in
         switch item {
-        case .defaultCell(let reactor):
+        case let .title(title):
+            let cell = collectionView.dequeueReusableCell(HeaderCell.self, for: indexPath)
+            cell.configure(with: title) { [weak self] in
+                self?.addItem()
+            }
+            return cell
+        case let .todo(reactor):
             let cell = collectionView.dequeueReusableCell(TodoListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
-        case .categoryCell(let items):
-            let cell = collectionView.dequeueReusableCell(CategoryCell.self, for: indexPath)
-            cell.initCellWithItems(items: items)
-            cell.selectedHandler = { [weak self] catIndex in // 선택된 카테고리 index
-                guard let self = self else { return }
-                let selectedPlanType = PlanType.allCases[catIndex]
-                self.reactor.action.onNext(.planTypeSelected(selectedPlanType))
-            }
-            return cell
-        case let .planTypesCell(planType):
+        case let .planType(planType):
             let cell = collectionView.dequeueReusableCell(PlanTypesCell.self, for: indexPath)
             cell.configure(selectedPlanType: planType)
             cell.selectionHandler = { [weak self] selectedPlanType in // 선택된 카테고리 index
                 self?.reactor.action.onNext(.planTypeSelected(selectedPlanType))
             }
             return cell
-        case .bookCell(let reactor):
-            let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
-            cell.reactor = reactor
-            return cell
-        case let .memoCell(memo):
+        case let .memo(memo):
             let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
             cell.configure(with: memo.content)
             cell.delegate = self
             return cell
+        case let .book(reactor):
+            let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
+            cell.reactor = reactor
+            return cell
         }
-    }, configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
-        
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            // 재사용 가능한 헤더셀을 가져옴
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as? HeaderCell else {
-                return UICollectionReusableView()
-            }
-            
-            header.reactor = HeaderCellReactor(headerTitle: dataSource[indexPath.section].header)
-            
-            // 헤더에서 추가버튼 클릭 Action
-            header.addButton.rx.tap
-                .subscribe(onNext: { [weak self] in
-                    guard let self = self else { return }
-                    self.addItem()
-                })
-                .disposed(by: header.disposeBag)
-            
-            return header
-        default:
-            assert(false, "Unexpected element kind")
-            return UICollectionReusableView()
-        }
-    })
+    }
     
     public init(reactor: HomeViewReactor, routing: HomeRouting) {
         self.reactor = reactor
@@ -102,7 +74,6 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -114,12 +85,11 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     }
     
     private func initCollectionView() {
+        self.collectionView.register(HeaderCell.self)
         self.collectionView.register(TodoListCell.self)
-        self.collectionView.register(CategoryCell.self)
         self.collectionView.register(PlanTypesCell.self)
-        self.collectionView.register(BookListCell.self)
         self.collectionView.register(MemoListCell.self)
-        self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderCell")
+        self.collectionView.register(BookListCell.self)
         
         self.collectionView.delegate = nil
         self.collectionView.dataSource = nil
@@ -137,7 +107,7 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
                 guard let self = self else { return }
                 let item = self.dataSource[indexPath]
                 switch item {
-                case let .bookCell(reactor):
+                case let .book(reactor):
                     let item = reactor.currentState
                     
                     let viewController = self.routing.addReadingViewController(openViewType: .update, book: item) { [weak self] book in
@@ -150,7 +120,7 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
                     }
                     
                     self.present(viewController, animated: true)
-                case .memoCell(_):  break // TODO: 메모 셀 선택시
+                case .memo(_):  break // TODO: 메모 셀 선택시
                 default:            break
                 }
             })
@@ -221,7 +191,7 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     // MARK: - MemoListCellDelegate
     func memoListCellDeleteTapped(of cell: MemoListCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-        let memo = self.state.memos[indexPath.item - 1]
+        let memo = self.state.memos[indexPath.item]
         self.reactor.action.onNext(.deleteMemo(memo))
     }
 }
@@ -230,36 +200,19 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     // TODO: 유동적인 높이 구현.
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         switch dataSource.sectionModels[indexPath.section].items[indexPath.item] {
-        case .defaultCell(_):
+        case let .title(title):
+            let width: CGFloat = collectionView.frame.width
+            let height: CGFloat = title.isEmpty ? 16 : 60 // header가 없을 경우 default Header Height 설정
+            return CGSize(width: width, height: height)
+        case .todo(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
-        case .categoryCell, .planTypesCell:
-            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 32)
-        case .bookCell(_):
-            return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
-        case .memoCell(_):
+        case .planType(_):
+            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+        case .memo(_):
             return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
-            
+        case .book(_):
+            return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
         }
-    }
-    
-    public override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
-            return header
-        default:
-            return UICollectionReusableView()
-        }
-    }
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let width: CGFloat = collectionView.frame.width
-        var height: CGFloat = 60
-        // header가 없을 경우 default Header Height 설정
-        if dataSource.sectionModels[section].header == "" {
-            height = 16
-        }
-        return CGSize(width: width, height: height)
     }
 }

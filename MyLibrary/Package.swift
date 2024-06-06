@@ -18,7 +18,6 @@ let package = Package(
                 "RepositoryImp",
                 "ViewModel",
                 "View",
-                "Common",
             ]
         ),
         .library(
@@ -28,6 +27,10 @@ let package = Package(
         .library(
             name: "Repository",
             targets: ["Repository", "RepositoryImp"]
+        ),
+        .library(
+            name: "View",
+            targets: ["View"]
         ),
         .library(
             name: "ViewModel",
@@ -41,8 +44,7 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/RxSwiftCommunity/RxDataSources.git", from: "5.0.0"),
         .package(url: "https://github.com/roberthein/TinyConstraints", .upToNextMajor(from: "4.0.1")),
-        .package(url: "https://github.com/ccgus/fmdb",
-            .upToNextMinor(from: "2.7.8")),
+        .package(url: "https://github.com/ccgus/fmdb", .upToNextMinor(from: "2.7.8")),
     ],
 
     targets: [
@@ -72,9 +74,9 @@ let package = Package(
         .target(
             name: "View",
             dependencies: [
+                "Common",
                 "Model",
                 "Repository",
-                "RepositoryImp", // Temporal Import
                 "ViewModel",
                 .product(name: "Alamofire", package: "Alamofire"),
                 .product(name: "ReactorKit", package: "ReactorKit"),
@@ -89,6 +91,7 @@ let package = Package(
         .target(
             name: "ViewModel",
             dependencies: [
+                "Common",
                 "Model",
                 "Repository",
                 .product(name: "ReactorKit", package: "ReactorKit"),

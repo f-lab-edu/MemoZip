@@ -119,37 +119,59 @@ public class HomeViewReactor: Reactor {
             if let planType = planType {
                 newState.selectedPlanType = planType
             }
-            let plans: [Plan]
-            switch newState.selectedPlanType {
-            case .memo: plans = newState.memos.map { Plan(memo: $0) }
-            case .book: plans = newState.books.map { Plan(book: $0) }
-            }
+            
+            let todoHeader = HomeSectionItem.title("Todo")
+            let todoItems = newState.todos.map { HomeSectionItem.todo(TodoListCellReactor(state: $0)) }
+            let planHeader = HomeSectionItem.title("Plan")
+            let playTypesItem = HomeSectionItem.planType(newState.selectedPlanType)
+            let memoItems = newState.memos.map { HomeSectionItem.memo($0) }
+            let bookItems = newState.books.map { HomeSectionItem.book(BookListCellReactor(state: $0)) }
+            
             var sections = [HomeSection]()
-            
-            let todoCells = todos.map {
-                HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
-            }
-            let planCells = plans.map { plan -> HomeSectionItem in
-                switch plan {
-                case .memo(let memo):
-                    // Memo 객체의 정보를 사용
-                    return HomeSectionItem.memoCell(memo)
-                case .book(let book):
-                    // Book 객체의 정보를 사용
-                    return HomeSectionItem.bookCell(BookListCellReactor(state: book))
-                }
+            sections.append(HomeSection(items: [todoHeader]))
+            sections.append(HomeSection(items: todoItems))
+            sections.append(HomeSection(items: [planHeader]))
+            sections.append(HomeSection(items: [playTypesItem]))
+            switch newState.selectedPlanType {
+            case .memo: sections.append(HomeSection(items: memoItems))
+            case .book: sections.append(HomeSection(items: bookItems))
             }
             
-            // TODO: Category도 Model화 작업 예정.
-            var categoryCells = [HomeSectionItem.planTypesCell(newState.selectedPlanType)]
             
-            categoryCells.append(contentsOf: planCells)
-            
-            let todoList = HomeSection(header: "Todo", items: todoCells)
-            let planList = HomeSection(header: "Plan", items: categoryCells)
-            
-            sections.append(todoList)
-            sections.append(planList)
+//            
+//            let plans: [Plan]
+//            switch newState.selectedPlanType {
+//            case .memo: plans = newState.memos.map { Plan(memo: $0) }
+//            case .book: plans = newState.books.map { Plan(book: $0) }
+//            }
+//            
+//            
+//            let todoCells = todos.map {
+//                HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
+//            }
+//            let planCells = plans.map { plan -> HomeSectionItem in
+//                switch plan {
+//                case .memo(let memo):
+//                    // Memo 객체의 정보를 사용
+//                    return HomeSectionItem.memoCell(memo)
+//                case .book(let book):
+//                    // Book 객체의 정보를 사용
+//                    return HomeSectionItem.bookCell(BookListCellReactor(state: book))
+//                }
+//            }
+//            
+//            // TODO: Category도 Model화 작업 예정.
+//            var categoryCells = [HomeSectionItem.planTypesCell(newState.selectedPlanType)]
+//            
+//            categoryCells.append(contentsOf: planCells)
+//            
+//            let todoList = HomeSection(header: "Todo", items: todoCells)
+//            let planTypes = HomeSection(header: "Plan", items: [HomeSectionItem.planTypesCell(newState.selectedPlanType)])
+//            let planList = HomeSection(header: "", items: planCells)
+//            
+//            sections.append(todoList)
+//            sections.append(planTypes)
+//            sections.append(planList)
             
             newState.sections = sections
         case .updateBook(let bookView):
