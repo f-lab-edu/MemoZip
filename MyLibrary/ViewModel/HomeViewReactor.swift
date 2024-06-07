@@ -32,7 +32,7 @@ public class HomeViewReactor: Reactor {
         case addMemo(String)
         case addBook(Book)
         case updateBook(Book)
-        case deleteMemo(Memo)
+        case deleteMemo(Memo.ID)
     }
     
     public enum Mutation {
@@ -96,8 +96,8 @@ public class HomeViewReactor: Reactor {
         case .addBook(let book):
             _ = self.bookRepository.create(book: book)
             return self.fetchAll(with: .book)
-        case let .deleteMemo(memo):
-            _ = memoRepository.delete(with: memo.memoID)
+        case let .deleteMemo(memoID):
+            _ = memoRepository.delete(with: memoID)
             return self.fetchAll(with: .memo)
         }
     }

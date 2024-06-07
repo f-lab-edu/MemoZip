@@ -9,7 +9,9 @@ import Foundation
 
 public struct Memo {
     
-    public let memoID: Int32
+    public typealias ID = Int32
+    
+    public let memoID: ID
     public var content: String
     
     public init(memoID: Int32, content: String) {

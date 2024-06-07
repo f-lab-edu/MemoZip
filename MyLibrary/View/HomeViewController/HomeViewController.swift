@@ -47,7 +47,7 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
             return cell
         case let .memo(memo):
             let cell = collectionView.dequeueReusableCell(MemoListCell.self, for: indexPath)
-            cell.configure(with: memo.content)
+            cell.configure(with: memo)
             cell.delegate = self
             return cell
         case let .book(reactor):
@@ -198,10 +198,8 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     }
     
     // MARK: - MemoListCellDelegate
-    func memoListCellDeleteTapped(of cell: MemoListCell) {
-        guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-        let memo = self.state.memos[indexPath.item - 1]
-        self.reactor.action.onNext(.deleteMemo(memo))
+    func memoListCellDeleteTapped(memoID: Memo.ID) {
+        self.reactor.action.onNext(.deleteMemo(memoID))
     }
 }
 
