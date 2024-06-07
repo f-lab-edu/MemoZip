@@ -9,11 +9,16 @@ import Foundation
 import RxDataSources
 
 public struct HomeSection {
+    public enum ID: Int {
+        case todo
+        case plan
+    }
+    public var id: ID
+    public var header: String
     public var items: [HomeSectionItem]
 }
 
 public enum HomeSectionItem {
-    case title(String)
     case todo(TodoListCellReactor)
     case planType(PlanType)
     case memo(Memo)

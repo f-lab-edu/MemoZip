@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HeaderCell: UICollectionViewCell {
+class HeaderCell: UICollectionReusableView {
     
     private weak var titleLabel: UILabel!
     private weak var addButton: UIButton!
@@ -15,6 +15,7 @@ class HeaderCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = .systemBackground
         self.setupSubviews()
     }
     

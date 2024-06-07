@@ -34,12 +34,6 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     typealias DataSource = RxCollectionViewSectionedReloadDataSource<HomeSection>
     lazy var dataSource = DataSource { dataSource, collectionView, indexPath, item in
         switch item {
-        case let .title(title):
-            let cell = collectionView.dequeueReusableCell(HeaderCell.self, for: indexPath)
-            cell.configure(with: title) { [weak self] in
-                self?.addItem()
-            }
-            return cell
         case let .todo(reactor):
             let cell = collectionView.dequeueReusableCell(TodoListCell.self, for: indexPath)
             cell.reactor = reactor
@@ -60,6 +54,20 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
             let cell = collectionView.dequeueReusableCell(BookListCell.self, for: indexPath)
             cell.reactor = reactor
             return cell
+        }
+    } configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
+        let section = dataSource.sectionModels[indexPath.section]
+        switch section.id {
+        case .todo:
+            let headerView = collectionView.dequeueReusableView(HeaderCell.self, kind: kind, for: indexPath)
+            headerView.configure(with: section.header, addTapped: nil)
+            return headerView
+        case .plan:
+            let headerView = collectionView.dequeueReusableView(HeaderCell.self, kind: kind, for: indexPath)
+            headerView.configure(with: section.header) { [weak self] in
+                self?.addItem()
+            }
+            return headerView
         }
     }
     
@@ -85,7 +93,8 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     }
     
     private func initCollectionView() {
-        self.collectionView.register(HeaderCell.self)
+        (self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
+        self.collectionView.registerHeader(HeaderCell.self)
         self.collectionView.register(TodoListCell.self)
         self.collectionView.register(PlanTypesCell.self)
         self.collectionView.register(MemoListCell.self)
@@ -191,7 +200,7 @@ public class HomeViewController: UICollectionViewController, MemoListCellDelegat
     // MARK: - MemoListCellDelegate
     func memoListCellDeleteTapped(of cell: MemoListCell) {
         guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-        let memo = self.state.memos[indexPath.item]
+        let memo = self.state.memos[indexPath.item - 1]
         self.reactor.action.onNext(.deleteMemo(memo))
     }
 }
@@ -200,19 +209,20 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     // TODO: 유동적인 높이 구현.
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let collectionViewWidth = collectionView.frame.width
         switch dataSource.sectionModels[indexPath.section].items[indexPath.item] {
-        case let .title(title):
-            let width: CGFloat = collectionView.frame.width
-            let height: CGFloat = title.isEmpty ? 16 : 60 // header가 없을 경우 default Header Height 설정
-            return CGSize(width: width, height: height)
         case .todo(_):
-            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+            return CGSize(width: collectionViewWidth - 32.0, height: 44)
         case .planType(_):
-            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 44)
+            return CGSize(width: collectionViewWidth - 32.0, height: 44)
         case .memo(_):
-            return CGSize(width: UIScreen.main.bounds.width - 32.0, height: 80)
+            return CGSize(width: collectionViewWidth - 32.0, height: 80)
         case .book(_):
-            return CGSize(width: (UIScreen.main.bounds.width - 44.0) / 2, height: (UIScreen.main.bounds.width - 44.0) * 0.6 )
+            return CGSize(width: (collectionViewWidth - 44.0) / 2, height: (collectionViewWidth - 44.0) * 0.6 )
         }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 60)
     }
 }

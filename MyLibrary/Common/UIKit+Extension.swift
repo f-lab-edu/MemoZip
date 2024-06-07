@@ -20,12 +20,20 @@ extension UIView: HasTypeName {
 // MARK: UICollectionView
 extension UICollectionView {
     package func register<T: UICollectionViewCell>(_ cellClass: T.Type) {
-    self.register(cellClass, forCellWithReuseIdentifier: T.typeName)
-  }
-  
+        self.register(cellClass, forCellWithReuseIdentifier: T.typeName)
+    }
+    
     package func dequeueReusableCell<T: UICollectionViewCell>(_ cellClass: T.Type, for indexPath: IndexPath) -> T {
-    return self.dequeueReusableCell(withReuseIdentifier: T.typeName, for: indexPath) as! T
-  }
+        return self.dequeueReusableCell(withReuseIdentifier: T.typeName, for: indexPath) as! T
+    }
+    
+    package func registerHeader<T: UICollectionReusableView>(_ viewClass: T.Type) {
+        self.register(viewClass, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: T.typeName)
+    }
+    
+    package func dequeueReusableView<T: UICollectionReusableView>(_ cellClass: T.Type, kind: String, for indexPath: IndexPath) -> T {
+        return self.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: T.typeName, for: indexPath) as! T
+    }
 }
 
 // MARK: UIView
