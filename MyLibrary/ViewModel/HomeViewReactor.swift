@@ -32,7 +32,7 @@ public class HomeViewReactor: Reactor {
         case addMemo(String)
         case addBook(Book)
         case updateBook(Book)
-        case deleteMemo(Memo)
+        case deleteMemo(Memo.ID)
     }
     
     public enum Mutation {
@@ -96,8 +96,8 @@ public class HomeViewReactor: Reactor {
         case .addBook(let book):
             _ = self.bookRepository.create(book: book)
             return self.fetchAll(with: .book)
-        case let .deleteMemo(memo):
-            _ = memoRepository.delete(with: memo.memoID)
+        case let .deleteMemo(memoID):
+            _ = memoRepository.delete(with: memoID)
             return self.fetchAll(with: .memo)
         }
     }
@@ -119,38 +119,16 @@ public class HomeViewReactor: Reactor {
             if let planType = planType {
                 newState.selectedPlanType = planType
             }
-            let plans: [Plan]
-            switch newState.selectedPlanType {
-            case .memo: plans = newState.memos.map { Plan(memo: $0) }
-            case .book: plans = newState.books.map { Plan(book: $0) }
+            
+            let todoItems = newState.todos.map { HomeSectionItem.todo(TodoListCellReactor(state: $0)) }
+            let planTypesItem = HomeSectionItem.planType(newState.selectedPlanType)
+            let planItems: [HomeSectionItem] = switch newState.selectedPlanType {
+            case .memo: newState.memos.map { HomeSectionItem.memo($0) }
+            case .book: newState.books.map { HomeSectionItem.book(BookListCellReactor(state: $0)) }
             }
             var sections = [HomeSection]()
-            
-            let todoCells = todos.map {
-                HomeSectionItem.defaultCell(TodoListCellReactor(state: $0))
-            }
-            let planCells = plans.map { plan -> HomeSectionItem in
-                switch plan {
-                case .memo(let memo):
-                    // Memo 객체의 정보를 사용
-                    return HomeSectionItem.memoCell(memo)
-                case .book(let book):
-                    // Book 객체의 정보를 사용
-                    return HomeSectionItem.bookCell(BookListCellReactor(state: book))
-                }
-            }
-            
-            // TODO: Category도 Model화 작업 예정.
-            var categoryCells = [HomeSectionItem.planTypesCell(newState.selectedPlanType)]
-            
-            categoryCells.append(contentsOf: planCells)
-            
-            let todoList = HomeSection(header: "Todo", items: todoCells)
-            let planList = HomeSection(header: "Plan", items: categoryCells)
-            
-            sections.append(todoList)
-            sections.append(planList)
-            
+            sections.append(HomeSection(id: .todo, header: "Todo", items: todoItems))
+            sections.append(HomeSection(id: .plan, header: "Plan", items: [planTypesItem] + planItems))
             newState.sections = sections
         case .updateBook(let bookView):
             newState.bookView = bookView

@@ -8,25 +8,21 @@ import Model
 import Foundation
 import RxDataSources
 
-// TODO: Header 추가
 public struct HomeSection {
+    public enum ID: Int {
+        case todo
+        case plan
+    }
+    public var id: ID
     public var header: String
     public var items: [HomeSectionItem]
-    public var identity: String
-    
-    public init(header: String, items: [HomeSectionItem]) {
-        self.header = header
-        self.items = items
-        self.identity = UUID().uuidString
-    }
 }
+
 public enum HomeSectionItem {
-    case defaultCell(TodoListCellReactor)
-    case categoryCell([String])
-    case planTypesCell(PlanType)
-    case bookCell(BookListCellReactor)
-    case memoCell(Memo)
-    // ...
+    case todo(TodoListCellReactor)
+    case planType(PlanType)
+    case memo(Memo)
+    case book(BookListCellReactor)
 }
 
 extension HomeSection: SectionModelType {

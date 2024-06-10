@@ -5,17 +5,19 @@
 //  Created by 박세라 on 5/21/24.
 //
 
+import Model
 import UIKit
 
 protocol MemoListCellDelegate: AnyObject {
-    func memoListCellDeleteTapped(of cell: MemoListCell)
+    func memoListCellDeleteTapped(memoID: Memo.ID)
 }
 
 class MemoListCell: UICollectionViewCell {
-
+    
     private weak var contentLabel: UILabel!
     private weak var baseView: UIView!
-    
+
+    private var memoID: Memo.ID!
     weak var delegate: MemoListCellDelegate?
     
     override init(frame: CGRect) {
@@ -58,14 +60,15 @@ class MemoListCell: UICollectionViewCell {
         deleteButton.centerYToSuperview()
     }
     
-    func configure(with memoContent: String) {
+    func configure(with memo: Memo) {
         self.layer.cornerRadius = 4
         self.baseView.layer.cornerRadius = 4
-        self.contentLabel.text = memoContent
+        self.memoID = memo.memoID
+        self.contentLabel.text = memo.content
     }
     
     @objc private func deleteTapped() {
-        self.delegate?.memoListCellDeleteTapped(of: self)
+        self.delegate?.memoListCellDeleteTapped(memoID: self.memoID)
     }
 }
     
